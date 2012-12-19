@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
@@ -33,6 +34,7 @@ public class Cockpit extends Activity {
 	
 	//Various buttons
 	Button btnThrottle;
+	Button btnPing;
 	
 	Context context;
 	
@@ -48,7 +50,7 @@ public class Cockpit extends Activity {
         setContentView(R.layout.activity_cockpit);
         
         //Initialize our sub
-        sub = new Submarine(context);
+        sub = new Submarine(this);
         
         //Set the event handlers for all of the buttons.
         /*Throttle button*/
@@ -67,7 +69,16 @@ public class Cockpit extends Activity {
 			}        	
         });
         
-        btnPing = (Button)findViewById(R.id.)
+        btnPing = (Button)findViewById(R.id.btnPing);
+        btnPing.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				sub.ping();
+			}
+        	
+        });
     }
 
 }

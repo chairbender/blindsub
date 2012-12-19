@@ -26,7 +26,7 @@
     />
     
     <Button
-        android:id="@+id/btnThrottle"
+        android:id="@+id/btnPing"
         android:layout_width="0dip"
 	    android:layout_weight="0.33"
 	    android:layout_height="match_parent"
@@ -34,7 +34,7 @@
     />
     
     <Button
-        android:id="@+id/btnThrottle"
+        android:id="@+id/btnFire"
         android:layout_width="0dip"
 	    android:layout_weight="0.33"
 	    android:layout_height="match_parent"
