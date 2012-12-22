@@ -19,13 +19,17 @@ import android.os.Handler;
  * @author Kyle
  *
  */
+//TODO: Eliminate lag. Use this https://github.com/AerialX/openal-soft-android/commit/5fae12e4ab0ebf0781a0a7a6d96a10e19008dc23 or at least that project instead
 public class Submarine {
 	
 	private final static String    TAG    = "HelloOpenAL4Android";
 
-    private SoundEnv            env;
+    private SoundEnv env;
 
-    private Source                ping;
+    private Source ping;
+    private Source engineStart;
+    private Source engineRun;
+    private Source engineStop;
 	
 	Context context;
 	
@@ -36,39 +40,34 @@ public class Submarine {
 		STOPPED,
 		DRIVING
 	};
-	
-	
-	/*Sound related fields*/
-	SoundPool soundPool; //manages playing all the sounds
-	
-	int startEngineId;
-    int stopEngineId;
-    int runEngineId;
-    int pingId; 
-    
-    int startEngineStreamId;
-    int stopEngineStreamId;
-    int runEngineStreamId;
 
 	private int orientation = 0;
 
+	private long startupSoundLengthInMillis;
+
     //Pass in the activity it is running in as parentActivity
 	public Submarine(Activity parentActivity) {
+		//Get durations before anything else otherwise audio stuff will crash
+		try {
+			startupSoundLengthInMillis = AudioUtil.getSoundDuration(parentActivity, "startup");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		this.context = context;
 		/* First we obtain the instance of the sound environment. */
         this.env = SoundEnv.getInstance(parentActivity);
 
-        /*
-         * Now we load the sounds into the memory that we want to play
-         * later. Each sound has to be buffered once only. To add new sound
-         * copy them into the assets folder of the Android project.
-         * Currently only mono .wav files are supported.
-         */
         Buffer ping = null;
+        Buffer start = null;
+        Buffer run = null;
+        Buffer stop = null;
 		try {
 			ping = env.addBuffer("ping");
+			start = env.addBuffer("startup");
+			run = env.addBuffer("run");
+			stop = env.addBuffer("stop");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -78,10 +77,10 @@ public class Submarine {
          * parameters, such as 3D position or pitch. Several sources can
          * share a single buffer.
          */
+		this.engineStart = env.addSource(start);
+		this.engineRun = env.addSource(run);
+		this.engineStop = env.addSource(stop);
         this.ping = env.addSource(ping);
-
-        // Now we spread the sounds throughout the sound room.
-        this.ping.setPosition(6, 0, -12);
 
         /*
          * These sounds are perceived from the perspective of a virtual
@@ -96,32 +95,32 @@ public class Submarine {
 	 * Start the sub moving
 	 */
 	void drive() {
-//		if (state != SubState.DRIVING) {
-//			//Play the engine start sound and follow it with the engine sustain sound loop
-//			state = SubState.DRIVING;
-//			startEngineStreamId = soundPool.play(startEngineId, .2f, .2f, 1, 0, 1.0f);
-//			new Handler().postDelayed(new Runnable() {
-//				public void run() {
-//					if (state == SubState.DRIVING) {
-//						soundPool.stop(startEngineStreamId);
-//						runEngineStreamId = soundPool.play(runEngineId, .2f, .2f, 1, -1, 1.0f);
-//					}
-//				}
-//			}, AudioUtil.getSoundDuration(context, R.raw.startup));
-//		}
+		if (state != SubState.DRIVING) {
+			//Play the engine start sound and follow it with the engine sustain sound loop
+			state = SubState.DRIVING;
+			engineStart.play(false);
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					if (state == SubState.DRIVING) {
+						engineStart.stop();
+						engineRun.play(true);
+					}
+				}
+			}, startupSoundLengthInMillis);
+		}
 	}
 	
 	/**
 	 * Stop the sub
 	 */
 	void stop() {
-//		if (state != SubState.STOPPED) {
-//			//play the engine stop sound and stop the engine start sound
-//			state = SubState.STOPPED;
-//			soundPool.stop(startEngineStreamId);
-//			soundPool.stop(runEngineStreamId);
-//			stopEngineStreamId = soundPool.play(stopEngineId, .2f, .2f, 1, 0, 1.0f);
-//		}
+		if (state != SubState.STOPPED) {
+			//play the engine stop sound and stop the engine start sound
+			state = SubState.STOPPED;
+			engineStart.stop();
+			engineRun.stop();
+			engineStop.play(false);
+		}
 	}
 	
 	void ping() {

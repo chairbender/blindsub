@@ -1,1 +1,1 @@
-Note, this project requires the OpenAL4Android project as a dependency
+Note, this project requires the OpenAL4Android
