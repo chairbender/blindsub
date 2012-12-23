@@ -16,7 +16,7 @@
         <!-- The activity where the user can control the sub by tilting the screen and pressing buttons. 
         It is forced to run in horizontal mode-->
         <activity
-            android:name="com.example.com.kwhipke.blindsub.Cockpit"
+            android:name="com.kwhipke.blindsub.Cockpit"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme" android:screenOrientation="sensorLandscape">
