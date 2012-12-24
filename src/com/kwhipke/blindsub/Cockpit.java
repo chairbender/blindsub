@@ -43,7 +43,13 @@ public class Cockpit extends Activity {
 	
 	//The player's submarine
     Submarine sub;
+    
+    //The tick rate of the physics engine (how frequently it updates)
+    //it's the number of milliseconds between each update
+    static final long UPDATE_INTERVAL_MILLISECONDS = 50;  
 	
+    //State
+    boolean isPaused = false;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +93,6 @@ public class Cockpit extends Activity {
         
         btnFire = (Button)findViewById(R.id.btnFire);
         btnFire.setOnTouchListener(new OnTouchListener() {
-
 			@Override
 			public boolean onTouch(View arg0, MotionEvent event) {
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -95,8 +100,49 @@ public class Cockpit extends Activity {
 				}
 				return false;
 			}
-        	
         });
+        
+        mainLoop();
+    }
+    
+    //runs until paused
+    private void mainLoop() {
+        //Main loop
+        new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (!isPaused) {
+					//Update the physics objects
+					sub.tick(UPDATE_INTERVAL_MILLISECONDS);
+					
+					//Wait the update interval
+					try {
+						Thread.sleep(UPDATE_INTERVAL_MILLISECONDS);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+        }).start();
+    }
+    
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	if (!isPaused) {
+	    	sub.onPause();
+	    	isPaused = true;
+    	}
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	if (isPaused) {
+    		sub.onResume();
+    		isPaused = false;
+    		mainLoop();
+    	}
     }
 
 }
