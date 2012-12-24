@@ -44,12 +44,11 @@ public class Cockpit extends Activity {
 	//The player's submarine
     Submarine sub;
     
-    //The tick rate of the physics engine (how frequently it updates)
-    //it's the number of milliseconds between each update
-    static final long UPDATE_INTERVAL_MILLISECONDS = 50;  
+
 	
     //State
     boolean isPaused = false;
+	private GameMap gameMap;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,28 +101,8 @@ public class Cockpit extends Activity {
 			}
         });
         
-        mainLoop();
-    }
-    
-    //runs until paused
-    private void mainLoop() {
-        //Main loop
-        new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (!isPaused) {
-					//Update the physics objects
-					sub.tick(UPDATE_INTERVAL_MILLISECONDS);
-					
-					//Wait the update interval
-					try {
-						Thread.sleep(UPDATE_INTERVAL_MILLISECONDS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-        }).start();
+        gameMap = new GameMap(this,sub);
+        gameMap.startMainLoop();
     }
     
     @Override
@@ -131,6 +110,7 @@ public class Cockpit extends Activity {
     	super.onPause();
     	if (!isPaused) {
 	    	sub.onPause();
+	    	gameMap.onPause();
 	    	isPaused = true;
     	}
     }
@@ -140,8 +120,7 @@ public class Cockpit extends Activity {
     	super.onResume();
     	if (isPaused) {
     		sub.onResume();
-    		isPaused = false;
-    		mainLoop();
+    		gameMap.onResume();
     	}
     }
 

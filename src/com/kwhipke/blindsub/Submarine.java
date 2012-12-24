@@ -24,8 +24,7 @@ import android.util.Log;
  * @author Kyle
  *
  */
-//TODO: Eliminate lag. Use this https://github.com/AerialX/openal-soft-android/commit/5fae12e4ab0ebf0781a0a7a6d96a10e19008dc23 or at least that project instead
-public class Submarine implements PhysObj {
+public class Submarine implements PhysObj, Pausable {
 	
 	private final static String    TAG    = "HelloOpenAL4Android";
 
@@ -62,6 +61,9 @@ public class Submarine implements PhysObj {
 	SensorEventListener gravityListener;
 	SensorEventListener geoListener;
 	
+	//Ping listeners
+	OnPingListener pingListener;
+	
 	//Stats in meters (our atomic physics unit) per second and degrees
 	private static final double METERS_PER_SECOND = 1.0;
 	private static final double MAX_DEGREES_PER_SECOND = 30; //max turning rate
@@ -87,36 +89,25 @@ public class Submarine implements PhysObj {
 		this.context = context;
 		/* First we obtain the instance of the sound environment. */
         this.env = SoundEnv.getInstance(parentActivity);
-
-        Buffer ping = null;
-        Buffer start = null;
-        Buffer run = null;
-        Buffer stop = null;
-        Buffer torpedoLaunch = null;
-        Buffer bubbles = null;
-		try {
-			ping = env.addBuffer("ping");
-			start = env.addBuffer("startup");
-			run = env.addBuffer("run");
-			stop = env.addBuffer("stop");
-			torpedoLaunch = env.addBuffer("torpedofire");
-			bubbles = env.addBuffer("bubbles");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+        //Get the sound manager
+        SoundManager manager = SoundManager.getSoundManager(parentActivity);
         /*
          * To actually play a sound and place it somewhere in the sound
          * environment, we have to create sources. Each source has its own
          * parameters, such as 3D position or pitch. Several sources can
          * share a single buffer.
          */
-		this.engineStart = env.addSource(start);
-		this.engineRun = env.addSource(run);
-		this.engineStop = env.addSource(stop);
-        this.ping = env.addSource(ping);
-        this.torpedoLaunch = env.addSource(torpedoLaunch);
-        this.bubbles = env.addSource(bubbles);
+		try {
+			this.engineStart = env.addSource(manager.getSound("startup"));
+			this.engineRun = env.addSource(manager.getSound("run"));
+			this.engineStop = env.addSource(manager.getSound("stop"));
+	        this.ping = env.addSource(manager.getSound("ping"));
+	        this.torpedoLaunch = env.addSource(manager.getSound("torpedofire"));
+	        this.bubbles = env.addSource(manager.getSound("bubbles"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         /*
          * These sounds are perceived from the perspective of a virtual
@@ -208,8 +199,9 @@ public class Submarine implements PhysObj {
 	
 	void ping() {
 		this.ping.play(false);
-		orientation += 10;
-		this.env.setListenerOrientation(orientation);
+		if (pingListener != null) {
+			this.pingListener.onPing(this.x, this.y);
+		}
 	}
 	
 	void fire() {
@@ -243,16 +235,15 @@ public class Submarine implements PhysObj {
 				} else if (heading < 0) {
 					heading = heading + 360;
 				}
+				
+				//Update its orientation
+				env.setListenerOrientation(heading);
 			}
 
 			//Calculate the horizontal and vertical components of the velocity vector
 			double components[] = getVelocityComponents();
 			this.x = this.x + components[0]*elapsedSeconds;
 			this.y = this.y + components[0]*elapsedSeconds;
-			
-			Log.i("Submarine", "heading: " + heading + " degrees");
-			Log.i("Submarine", "x, y: " + this.x + " " + this.y);
-			Log.i("Submarine", "roll: " + roll);
 		}
 	}
 	
@@ -279,11 +270,13 @@ public class Submarine implements PhysObj {
 		return result;
 	}
 	
+	@Override
 	public void onPause() {
 		sensorManager.unregisterListener(gravityListener);
 		sensorManager.unregisterListener(geoListener);
 	}
 	
+	@Override
 	public void onResume() {
 		Sensor gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         Sensor geoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
@@ -291,6 +284,16 @@ public class Submarine implements PhysObj {
         sensorManager.registerListener(geoListener, geoSensor,SensorManager.SENSOR_DELAY_GAME);
 	}
 	
-	
+	public void setOnPingListener(OnPingListener toAdd) {
+		this.pingListener = toAdd;
+	}
+
+	@Override
+	public double[] getPosition() {
+		double result[] = new double[2];
+		result[0] = this.x;
+		result[1] = this.y;
+		return result;
+	}
 	
 }

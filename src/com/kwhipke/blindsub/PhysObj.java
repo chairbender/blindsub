@@ -14,4 +14,10 @@ public interface PhysObj {
 	 * and the previous tick. If first tick, is 0.
 	 */
 	public void tick(long elapsedMillis);
+	
+	/**
+	 * return the x and y coordinates of the object
+	 * x is index 0 y index 1
+	 */
+	public double[] getPosition();
 }
