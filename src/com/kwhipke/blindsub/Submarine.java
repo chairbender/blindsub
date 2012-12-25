@@ -89,6 +89,7 @@ public class Submarine implements PhysObj, Pausable {
 		this.context = context;
 		/* First we obtain the instance of the sound environment. */
         this.env = SoundEnv.getInstance(parentActivity);
+        env.setListenerOrientation(getEnvironmentOrientation());
         //Get the sound manager
         SoundManager manager = SoundManager.getSoundManager(parentActivity);
         /*
@@ -108,14 +109,6 @@ public class Submarine implements PhysObj, Pausable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-        /*
-         * These sounds are perceived from the perspective of a virtual
-         * listener. Initially the position of this listener is 0,0,0. The
-         * position and the orientation of the virtual listener can be
-         * adjusted via the SoundEnv class.
-         */
-        this.env.setListenerOrientation(0);
         
         //Register the handlers for getting sensor data
         
@@ -237,7 +230,7 @@ public class Submarine implements PhysObj, Pausable {
 				}
 				
 				//Update its orientation
-				env.setListenerOrientation(heading);
+				env.setListenerOrientation(getEnvironmentOrientation());
 			}
 
 			//Calculate the horizontal and vertical components of the velocity vector
@@ -294,6 +287,20 @@ public class Submarine implements PhysObj, Pausable {
 		result[0] = this.x;
 		result[1] = this.y;
 		return result;
+	}
+	
+	//gets the heading in 360 degrees with 0 being east
+	public double getOrientation() {
+		return heading;
+	}
+	
+	//Converts this sub's heading into the OpenAL listener orientation in degrees
+	private double getEnvironmentOrientation() {
+		double sourceHeading = heading - 180;
+		if (sourceHeading < 0) {
+			sourceHeading = sourceHeading + 360;
+		}
+		return sourceHeading;
 	}
 	
 }

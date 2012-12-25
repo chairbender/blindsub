@@ -34,7 +34,7 @@ public class GameMap implements Pausable {
 	private boolean isLooping = false;
 	
 	//Speed that sound travels at in the water in this game
-	private static final double SOUND_METERS_PER_SECOND = 1;
+	private static final double SOUND_METERS_PER_SECOND = 30;
     //The tick rate of the physics engine (how frequently it updates)
     //it's the number of milliseconds between each update
     static final long UPDATE_INTERVAL_MILLISECONDS = 50;  
@@ -54,7 +54,7 @@ public class GameMap implements Pausable {
 		this.env = SoundEnv.getInstance(parentActivity);
 		Buffer ping = null;
 		try {
-			ping = SoundManager.getSoundManager(parentActivity).getSound("ping");
+			ping = SoundManager.getSoundManager(parentActivity).getSound("pingresponse");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,9 +90,12 @@ public class GameMap implements Pausable {
 							Log.i("GameMap","playing response");
 							objSource.play(false);
 						}
-					},  (Math.round(distance / SOUND_METERS_PER_SECOND)) * 2) * 1000);
-					Log.i("GameMap", "time: " + ((distance / (SOUND_METERS_PER_SECOND*1000.0)) * 2));
+					},  Math.round(((distance / SOUND_METERS_PER_SECOND) * 2)) * 1000);
+					Log.i("GameMap", "time: " + (distance / (SOUND_METERS_PER_SECOND)*1000.0* 2));
 					Log.i("GameMap", "distance: " + distance);
+					Log.i("GameMap", "orientation: " + playerSub.getOrientation());
+					Log.i("GameMap", "x, y, source pos: " + (objPos[0] - subPos[0]) + " " +
+							(objPos[1] - subPos[1]));
 				}
 			}
 		});
