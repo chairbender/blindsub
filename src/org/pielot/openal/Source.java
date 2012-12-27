@@ -1,5 +1,15 @@
 package org.pielot.openal;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
+import com.kwhipke.blindsub.util.AudioUtil;
+
 /**
  * This class represents an OpenAL source. Sources are used to play back the
  * data from a buffer. The source stores all data of the play back, such as the
@@ -51,6 +61,23 @@ public class Source {
 	
 	public void play(boolean loop) {
 		OpenAlBridge.play(sourceId, loop);
+	}
+	
+	/**
+	 * Play the sound after a given amount of time
+	 * @param loop
+	 * @param millis
+	 */
+	public void playDelayed(final boolean loop, long millis) {
+		final ScheduledExecutorService exec = Executors.newScheduledThreadPool(1);
+		Log.i("playing","playing it delayed by " + millis);
+		exec.schedule(new Runnable(){
+		    @Override
+		    public void run(){
+		    	Log.i("playdelayed", "playing it delayed");
+		        play(loop);
+		    }
+		}, millis, TimeUnit.MILLISECONDS);
 	}
 	
 	public void stop() {

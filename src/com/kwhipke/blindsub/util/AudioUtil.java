@@ -17,6 +17,9 @@ import android.media.MediaPlayer;
  *
  */
 public class AudioUtil {
+	
+	//Speed that sound travels at in the water in this game
+	public static final double SOUND_METERS_PER_SECOND = 30;
 
 	/**
 	 * Get the length of the resource in millis. Will not work if OpenAl is initialized
@@ -37,4 +40,18 @@ public class AudioUtil {
 		int length = mp.getDuration();
 	   return length;
 	}
+    
+    /**
+     * Given a heading in degrees with 0 degrees being east and 90 north,
+     * convert to the openAl orientation in degrees
+     * @param subgameOrientation
+     * @return
+     */
+    public static double getOpenAlOrientation(double subgameOrientation) {
+    	double sourceHeading = subgameOrientation - 180;
+		if (sourceHeading < 0) {
+			sourceHeading = sourceHeading + 360;
+		}
+		return sourceHeading;
+    }
 }

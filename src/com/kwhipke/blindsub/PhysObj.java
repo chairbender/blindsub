@@ -34,6 +34,7 @@ public interface PhysObj {
 	 * and strictly forbidden from messing with the other object's state. This method
 	 * will be invoked on both objects.
 	 * @param other
+	 * @return true if this object should be destroyed
 	 */
-	public void resolveCollision(PhysObj other);
+	public boolean resolveCollision(PhysObj other);
 }

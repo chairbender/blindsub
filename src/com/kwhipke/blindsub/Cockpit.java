@@ -59,7 +59,9 @@ public class Cockpit extends Activity {
         setContentView(R.layout.activity_cockpit);
         
         //Initialize our sub
-        sub = new PlayerSubmarine(this,0,0,0);
+        
+        gameMap = new GameMap(this);
+        sub = gameMap.getPlayerSub();
         
         //Set the event handlers for all of the buttons.
         /*Throttle button*/
@@ -101,8 +103,7 @@ public class Cockpit extends Activity {
 				return false;
 			}
         });
-        
-        gameMap = new GameMap(this,sub);
+
         gameMap.startMainLoop();
     }
     

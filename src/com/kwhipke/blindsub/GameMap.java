@@ -10,8 +10,10 @@ import org.pielot.openal.Buffer;
 import org.pielot.openal.SoundEnv;
 import org.pielot.openal.Source;
 
+import com.kwhipke.blindsub.submarine.Bullet;
 import com.kwhipke.blindsub.submarine.PlayerSubmarine;
 import com.kwhipke.blindsub.submarine.StaticSub;
+import com.kwhipke.blindsub.util.AudioUtil;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -34,26 +36,24 @@ public class GameMap implements Pausable {
 	private Set<PhysObj> physicalObjects;
 	
 	private SoundEnv env;
+	private Source ping;
 	
 	private Activity parentActivity;
 	
 	private boolean isPaused;
 	private boolean isLooping = false;
 	
-	//Speed that sound travels at in the water in this game
-	private static final double SOUND_METERS_PER_SECOND = 30;
     //The tick rate of the physics engine (how frequently it updates)
     //it's the number of milliseconds between each update
     static final long UPDATE_INTERVAL_MILLISECONDS = 50;  
-	
-	
+    
 	/**
 	 * 
 	 * @param playerSub the player's submarine. must not be null
 	 */
-	public GameMap(Activity parentActivity, PlayerSubmarine playerSubmarine) {
+	public GameMap(Activity parentActivity) {
 		this.parentActivity = parentActivity;
-		this.playerSub = playerSubmarine;
+		this.playerSub = new PlayerSubmarine(parentActivity,this,0f,0f,0f);
 		this.otherObjects = new HashMap<PhysObj,Source>();
 		this.physicalObjects = new HashSet<PhysObj>();
 		
@@ -67,10 +67,11 @@ public class GameMap implements Pausable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
+		this.ping = env.addSource(ping);
 		
 		//Here's where we will create all our objects and their corresponding ping sources
 		//For now have a dummy phys object
-		StaticSub staticSub = new StaticSub(5,5);
+		StaticSub staticSub = new StaticSub(parentActivity, this,5,5);
 		otherObjects.put(staticSub, env.addSource(ping));
 		
 		//Add event handler to play response pings when submarine 
@@ -99,17 +100,12 @@ public class GameMap implements Pausable {
 							Log.i("GameMap","playing response");
 							objSource.play(false);
 						}
-					},  Math.round(((distance / SOUND_METERS_PER_SECOND) * 2)) * 1000);
-					Log.i("GameMap", "time: " + (distance / (SOUND_METERS_PER_SECOND)*1000.0* 2));
-					Log.i("GameMap", "distance: " + distance);
-					Log.i("GameMap", "orientation: " + playerSub.getOrientation());
-					Log.i("GameMap", "x, y, source pos: " + (objPos[0] - subPos[0]) + " " +
-							(objPos[1] - subPos[1]));
+					},  Math.round(((distance / AudioUtil.SOUND_METERS_PER_SECOND) * 2)) * 1000);
 				}
 			}
 		});
 		
-		this.physicalObjects.add(playerSubmarine);
+		this.physicalObjects.add(playerSub);
 		this.physicalObjects.add(staticSub);
 	}
 	
@@ -124,21 +120,36 @@ public class GameMap implements Pausable {
 			@Override
 			public void run() {
 				while (!isPaused) {
+					long chrono = System.currentTimeMillis();
+					//Objects that are destroyed
+					Set<PhysObj> toRemove = new HashSet<PhysObj>();
 					for (PhysObj obj : physicalObjects) {
 						//Update the physics objects
 						obj.tick(UPDATE_INTERVAL_MILLISECONDS);
-						
+
 						//If any collisions have happened, resolve them
 						for (PhysObj otherObj : physicalObjects) {
 							if (otherObj != obj) {
-								obj.resolveCollision(otherObj);
+								if (obj.resolveCollision(otherObj)) {
+									toRemove.add(obj);
+								}
 							}
 						}
 					}
 					
-					//Wait the update interval
+					//remove stuff 
+					for (PhysObj obj : toRemove) {
+						physicalObjects.remove(obj);
+						otherObjects.remove(obj);
+						if (obj == playerSub) {
+							Log.i("Game","player sub killed!");
+							return;
+						}
+					}
+					
+					//Wait the update interval - whatever time we spend here
 					try {
-						Thread.sleep(UPDATE_INTERVAL_MILLISECONDS);
+						Thread.sleep(UPDATE_INTERVAL_MILLISECONDS - (System.currentTimeMillis() - chrono));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -163,5 +174,25 @@ public class GameMap implements Pausable {
 			}
 		}
 	}
+	
+	/*
+	 * returns the x and y coordinates of the player submarine.
+	 * [x,y]
+	 */
+	public PlayerSubmarine getPlayerSub() {
+		//Get player submarine location
+		return playerSub;
+	}
+	
+	/**
+	 * 
+	 * @param toAdd add this bullet to the map. will be updated like all phys objects
+	 */
+	public void addBullet(Bullet toAdd) {
+		this.physicalObjects.add(toAdd);
+		this.otherObjects.put(toAdd,ping);
+	}
+	
+	
 
 }
