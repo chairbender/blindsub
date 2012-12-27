@@ -20,4 +20,20 @@ public interface PhysObj {
 	 * x is index 0 y index 1
 	 */
 	public double[] getPosition();
+	
+	/**
+	 * 
+	 * @return the radius of the object's collision circle. Assuming
+	 * every object is just a circle for simplicity right now.
+	 */
+	public double getRadius();
+	
+	/**
+	 * Resolve the collision. The object this method is invoked on should NOT
+	 * modify the state of other. Each object is only responsible for their own state
+	 * and strictly forbidden from messing with the other object's state. This method
+	 * will be invoked on both objects.
+	 * @param other
+	 */
+	public void resolveCollision(PhysObj other);
 }

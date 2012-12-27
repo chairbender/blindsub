@@ -2,12 +2,16 @@ package com.kwhipke.blindsub;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import org.pielot.openal.Buffer;
 import org.pielot.openal.SoundEnv;
 import org.pielot.openal.Source;
+
+import com.kwhipke.blindsub.submarine.PlayerSubmarine;
+import com.kwhipke.blindsub.submarine.StaticSub;
 
 import android.app.Activity;
 import android.os.Handler;
@@ -21,10 +25,13 @@ import android.util.Log;
  */
 public class GameMap implements Pausable {
 
-	private Submarine playerSub;
+	private PlayerSubmarine playerSub;
 	
-	//Stores a map between physics objects and their ping source
+	//Stores a map between physics objects other than the player and their ping source
 	private Map<PhysObj,Source> otherObjects;
+	
+	//stores all physics objects including the player sub
+	private Set<PhysObj> physicalObjects;
 	
 	private SoundEnv env;
 	
@@ -44,10 +51,11 @@ public class GameMap implements Pausable {
 	 * 
 	 * @param playerSub the player's submarine. must not be null
 	 */
-	public GameMap(Activity parentActivity, Submarine playerSubmarine) {
+	public GameMap(Activity parentActivity, PlayerSubmarine playerSubmarine) {
 		this.parentActivity = parentActivity;
 		this.playerSub = playerSubmarine;
 		this.otherObjects = new HashMap<PhysObj,Source>();
+		this.physicalObjects = new HashSet<PhysObj>();
 		
 		//Prepare the ping sound that we will use for responding to
 		//the player submarine's pings
@@ -62,7 +70,8 @@ public class GameMap implements Pausable {
 		
 		//Here's where we will create all our objects and their corresponding ping sources
 		//For now have a dummy phys object
-		otherObjects.put(new StaticSub(5,5), env.addSource(ping));
+		StaticSub staticSub = new StaticSub(5,5);
+		otherObjects.put(staticSub, env.addSource(ping));
 		
 		//Add event handler to play response pings when submarine 
 		playerSub.setOnPingListener(new OnPingListener() {
@@ -99,6 +108,9 @@ public class GameMap implements Pausable {
 				}
 			}
 		});
+		
+		this.physicalObjects.add(playerSubmarine);
+		this.physicalObjects.add(staticSub);
 	}
 	
 	/**
@@ -112,8 +124,17 @@ public class GameMap implements Pausable {
 			@Override
 			public void run() {
 				while (!isPaused) {
-					//Update the physics objects
-					playerSub.tick(UPDATE_INTERVAL_MILLISECONDS);
+					for (PhysObj obj : physicalObjects) {
+						//Update the physics objects
+						obj.tick(UPDATE_INTERVAL_MILLISECONDS);
+						
+						//If any collisions have happened, resolve them
+						for (PhysObj otherObj : physicalObjects) {
+							if (otherObj != obj) {
+								obj.resolveCollision(otherObj);
+							}
+						}
+					}
 					
 					//Wait the update interval
 					try {

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.kwhipke.blindsub.R;
+import com.kwhipke.blindsub.submarine.PlayerSubmarine;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -42,7 +43,7 @@ public class Cockpit extends Activity {
 	Context context;
 	
 	//The player's submarine
-    Submarine sub;
+    PlayerSubmarine sub;
     
 
 	
@@ -58,7 +59,7 @@ public class Cockpit extends Activity {
         setContentView(R.layout.activity_cockpit);
         
         //Initialize our sub
-        sub = new Submarine(this,0,0,0);
+        sub = new PlayerSubmarine(this,0,0,0);
         
         //Set the event handlers for all of the buttons.
         /*Throttle button*/
