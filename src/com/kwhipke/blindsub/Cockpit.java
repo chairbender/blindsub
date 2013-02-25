@@ -6,6 +6,9 @@ import java.util.ResourceBundle;
 
 import com.kwhipke.blindsub.R;
 import com.kwhipke.blindsub.submarine.PlayerSubmarine;
+import com.kwhipke.blindsub.submarine.listeners.FireTouchListener;
+import com.kwhipke.blindsub.submarine.listeners.PingTouchListener;
+import com.kwhipke.blindsub.submarine.listeners.ThrottleTouchListener;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -33,23 +36,9 @@ import android.widget.Button;
  *
  * @see SystemUiHider
  */
-public class Cockpit extends Activity {
-	
-	//Various buttons
-	Button btnThrottle;
-	Button btnPing;
-	Button btnFire;
-	
+public class Cockpit extends BlindSubActivity {
 	Context context;
-	
-	//The player's submarine
-    PlayerSubmarine sub;
-    
-
-	
-    //State
-    boolean isPaused = false;
-	private GameMap gameMap;
+	Game game;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,72 +47,32 @@ public class Cockpit extends Activity {
         
         setContentView(R.layout.activity_cockpit);
         
-        //Initialize our sub
-        
-        gameMap = new GameMap(this);
-        sub = gameMap.getPlayerSub();
+        //Initialize a game
+        game = new Game();
         
         //Set the event handlers for all of the buttons.
-        /*Throttle button*/
-        btnThrottle = (Button)findViewById(R.id.btnThrottle);
-        //When pressed, play the startup sound. When startup sound is done,
-        //play the hold sound. Then when release, play the stop sound.
-        btnThrottle.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motion) {
-				if (motion.getAction() == MotionEvent.ACTION_DOWN) {
-					sub.drive();
-				} else if (motion.getAction() == MotionEvent.ACTION_UP) {
-					sub.stop();
-				}
-				return false;
-			}        	
-        });
+        Button btnThrottle = (Button)findViewById(R.id.btnThrottle);
+        btnThrottle.setOnTouchListener(new ThrottleTouchListener(game));
         
-        btnPing = (Button)findViewById(R.id.btnPing);
-        btnPing.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					sub.ping();
-				}
-				return false;
-			}
-        	
-        });
+        Button btnPing = (Button)findViewById(R.id.btnPing);
+        btnPing.setOnTouchListener(new PingTouchListener(game));
         
-        btnFire = (Button)findViewById(R.id.btnFire);
-        btnFire.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View arg0, MotionEvent event) {
-				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					sub.fire();
-				}
-				return false;
-			}
-        });
-
-        gameMap.startMainLoop();
+        Button btnFire = (Button)findViewById(R.id.btnFire);
+        btnFire.setOnTouchListener(new FireTouchListener(game));
+        
+        game.start();
     }
     
     @Override
     protected void onPause() {
     	super.onPause();
-    	if (!isPaused) {
-	    	sub.onPause();
-	    	gameMap.onPause();
-	    	isPaused = true;
-    	}
+    	game.pause();
     }
     
     @Override
     protected void onResume() {
     	super.onResume();
-    	if (isPaused) {
-    		sub.onResume();
-    		gameMap.onResume();
-    	}
+    	game.resume();
     }
 
 }

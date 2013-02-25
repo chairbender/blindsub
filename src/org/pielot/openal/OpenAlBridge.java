@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.kwhipke.blindsub.ContextUtil;
+
 import android.app.Activity;
 import android.util.Log;
 
@@ -84,28 +86,28 @@ public class OpenAlBridge {
 		return "UNKNOWN";
 	}
 
-	public static String getWavPath(Activity activity, String name)
+	public static String getWavPath(String name)
 			throws IOException {
 
 		String filename = name + ".wav";
-		File file = new File(activity.getFilesDir() , filename);
+		File file = new File(ContextUtil.getAppContext().getFilesDir() , filename);
 
 		if (!file.exists()) {
 			Log.w(TAG, file + " not found, copying from assets");
-			retrieveFromAssets(activity, filename);
+			retrieveFromAssets(filename);
 		} else {
 		}
 
 		return file.getAbsolutePath();
 	}
 
-	private static void retrieveFromAssets(Activity activity, String filename)
+	private static void retrieveFromAssets(String filename)
 			throws IOException {
 
-		InputStream is = activity.getAssets().open(filename);
+		InputStream is = ContextUtil.getAppContext().getAssets().open(filename);
 
 		// Destination
-		File outFile = new File(activity.getFilesDir(), filename);
+		File outFile = new File(ContextUtil.getAppContext().getFilesDir(), filename);
 
 		Log.i(TAG, "retrieveFromAssets( .. ) copying "
 				+ filename

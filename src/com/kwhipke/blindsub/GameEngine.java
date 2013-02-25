@@ -10,6 +10,7 @@ import org.pielot.openal.Buffer;
 import org.pielot.openal.SoundEnv;
 import org.pielot.openal.Source;
 
+import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.Bullet;
 import com.kwhipke.blindsub.submarine.PlayerSubmarine;
 import com.kwhipke.blindsub.submarine.StaticSub;
@@ -20,12 +21,12 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * Represents the state of a game and the map every sub is playing in.
+ * Represents the state of a single game and the map every sub is playing in.
  * Handles updating the game state and interactions between game objects.
  * @author Kyle
  *
  */
-public class GameMap implements Pausable {
+public class GameEngine implements Pausable {
 
 	private PlayerSubmarine playerSub;
 	
@@ -51,9 +52,8 @@ public class GameMap implements Pausable {
 	 * 
 	 * @param playerSub the player's submarine. must not be null
 	 */
-	public GameMap(Activity parentActivity) {
-		this.parentActivity = parentActivity;
-		this.playerSub = new PlayerSubmarine(parentActivity,this,0f,0f,0f);
+	public GameEngine() {
+		this.playerSub = new PlayerSubmarine(this,0f,0f,0f);
 		this.otherObjects = new HashMap<PhysObj,Source>();
 		this.physicalObjects = new HashSet<PhysObj>();
 		
@@ -62,7 +62,7 @@ public class GameMap implements Pausable {
 		this.env = SoundEnv.getInstance(parentActivity);
 		Buffer ping = null;
 		try {
-			ping = SoundManager.getSoundManager(parentActivity).getSound("pingresponse");
+			ping = SoundEngine.getSoundManager(parentActivity).getSound("pingresponse");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

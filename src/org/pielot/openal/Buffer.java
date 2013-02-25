@@ -60,9 +60,9 @@ public class Buffer {
 	 *            buffer.
 	 * @throws IOException if the sound file cannot be found
 	 */
-	public static Buffer createFrom(Activity activity, String name)
+	public static Buffer createFrom(String name)
 			throws IOException {
-		String path = OpenAlBridge.getWavPath(activity, name);
+		String path = OpenAlBridge.getWavPath(name);
 		return new Buffer(name, path);
 	}
 

@@ -8,20 +8,20 @@ import org.pielot.openal.Source;
 import android.app.Activity;
 import android.util.Log;
 
-import com.kwhipke.blindsub.GameMap;
+import com.kwhipke.blindsub.GameEngine;
 import com.kwhipke.blindsub.PhysObj;
-import com.kwhipke.blindsub.SoundManager;
+import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.util.AudioUtil;
 
 //A sub that just stays in place
 public class StaticSub extends Submarine {
 	
 	private double position[];
-	private GameMap currentMap;
+	private GameEngine currentMap;
 	
 	Source distantHit;
 	
-	public StaticSub(Activity parentActivity, GameMap currentMap, int x, int y) {
+	public StaticSub(Activity parentActivity, GameEngine currentMap, int x, int y) {
 		super(parentActivity, currentMap);
 		this.currentMap = currentMap;
 		position = new double[2];
@@ -30,7 +30,7 @@ public class StaticSub extends Submarine {
 		
 		SoundEnv env = SoundEnv.getInstance(parentActivity);
 		try {
-			distantHit = env.addSource(SoundManager.getSoundManager(parentActivity).getSound("distanthit"));
+			distantHit = env.addSource(SoundEngine.getSoundManager(parentActivity).getSound("distanthit"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

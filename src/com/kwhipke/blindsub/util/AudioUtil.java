@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import org.pielot.openal.OpenAlBridge;
 
+import com.kwhipke.blindsub.ContextUtil;
+
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -28,8 +30,8 @@ public class AudioUtil {
 	 * @return
 	 * @throws IOException 
 	 */
-    public static long getSoundDuration(Activity activity, String wavFileName) throws IOException{
-    	File file = new File(OpenAlBridge.getWavPath(activity,wavFileName));
+    public static long getSoundDuration(String wavFileName) throws IOException{
+    	File file = new File(OpenAlBridge.getWavPath(wavFileName));
 		MediaPlayer mp = new MediaPlayer();
 		FileInputStream fs;
 		FileDescriptor fd;
@@ -40,18 +42,4 @@ public class AudioUtil {
 		int length = mp.getDuration();
 	   return length;
 	}
-    
-    /**
-     * Given a heading in degrees with 0 degrees being east and 90 north,
-     * convert to the openAl orientation in degrees
-     * @param subgameOrientation
-     * @return
-     */
-    public static double getOpenAlOrientation(double subgameOrientation) {
-    	double sourceHeading = subgameOrientation - 180;
-		if (sourceHeading < 0) {
-			sourceHeading = sourceHeading + 360;
-		}
-		return sourceHeading;
-    }
 }

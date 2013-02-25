@@ -4,11 +4,12 @@ import java.io.IOException;
 
 import org.pielot.openal.*;
 
-import com.kwhipke.blindsub.GameMap;
+import com.kwhipke.blindsub.GameEngine;
 import com.kwhipke.blindsub.OnPingListener;
 import com.kwhipke.blindsub.Pausable;
 import com.kwhipke.blindsub.PhysObj;
-import com.kwhipke.blindsub.SoundManager;
+import com.kwhipke.blindsub.physics.SubmarineState;
+import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.util.AudioUtil;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
@@ -62,8 +63,7 @@ public class PlayerSubmarine extends Submarine implements Pausable {
 	private float lastGravityVector[] = new float[3];
 	private float lastGeoVector[] = new float[3];
 	
-	private double x, y; //0,0 is the bottom left of the map
-	private double heading; //0 is east
+	SubmarineState submarineState;
 	
 	//Sensor event listeners
 	SensorEventListener gravityListener;
@@ -82,30 +82,21 @@ public class PlayerSubmarine extends Submarine implements Pausable {
 
 	private long startupSoundLengthInMillis;
 	
-	private GameMap currentMap;
+	private GameEngine currentMap;
 	
 
-    //Pass in the activity it is running in as parentActivity
-	public PlayerSubmarine(Activity parentActivity, GameMap currentMap, float startX, float startY, float startHeading) {
-		super(parentActivity, currentMap);
-		this.x = startX;
-		this.y = startY;
-		this.heading = startHeading;
-		this.currentMap = currentMap; //TODO: This is duplicated
+	public PlayerSubmarine(SubmarineState initialState, SoundEngine soundEngine) {
+		super(initialState, soundEngine);
+		this.submarineState = initialState;
 		
 		//Get durations before anything else otherwise audio stuff will crash
 		try {
-			startupSoundLengthInMillis = AudioUtil.getSoundDuration(parentActivity, "startup");
+			startupSoundLengthInMillis = AudioUtil.getSoundDuration("startup");
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		this.context = context;
-		/* First we obtain the instance of the sound environment. */
-        this.env = SoundEnv.getInstance(parentActivity);
-        env.setListenerOrientation(AudioUtil.getOpenAlOrientation(heading));
-        //Get the sound manager
-        SoundManager manager = SoundManager.getSoundManager(parentActivity);
+				
+        
         /*
          * To actually play a sound and place it somewhere in the sound
          * environment, we have to create sources. Each source has its own

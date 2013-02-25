@@ -1,41 +1,35 @@
-package com.kwhipke.blindsub;
-
-import org.pielot.openal.*;
-
-import android.app.Activity;
+package com.kwhipke.blindsub.sound;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.pielot.openal.Buffer;
+import org.pielot.openal.SoundEnv;
+
 /**
- * Manages audio buffers. Singleton
+ * Manages loading audio buffers.
  * @author Kyle
  *
  */
-public class SoundManager {
+class BufferManager {
 	private Map<String, Buffer> buffers;
-	private SoundEnv env;
+	SoundEnv env;
 	
-	private static SoundManager soundManager;
-	
-	private SoundManager(Activity parentActivity) {
+	/**
+	 * 
+	 * @param env the sound environment that the buffers will be loaded in
+	 */
+	public BufferManager(SoundEnv env) {
 		buffers = new HashMap<String,Buffer>();
-		env = SoundEnv.getInstance(parentActivity);
 	}
-	
-	public static SoundManager getSoundManager(Activity parentActivity) {
-		if (soundManager == null)
-			soundManager = new SoundManager(parentActivity);
-		return soundManager;
-	}
-	
 	/**
 	 * 
 	 * @param name name of the wav file in the assets folder for this sound
 	 * example: "ping" would get the buffer for "assets/ping.wav"
 	 * @return a buffer for the sound. DO NOT MODIFY THIS BUFFER as it
 	 * it may be used accross multiple objects.
-	 * @throws IOException if sound not found
+	 * @throws IOException if no sound found
 	 */
 	public Buffer getSound(String name) throws IOException {
 		if (buffers.get(name) != null) {
@@ -45,6 +39,4 @@ public class SoundManager {
 			return buffers.get(name);
 		}
 	}
-	
-	
 }

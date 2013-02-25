@@ -8,6 +8,8 @@ import org.pielot.openal.Source;
 import android.app.Activity;
 
 import com.kwhipke.blindsub.*;
+import com.kwhipke.blindsub.physics.SubmarineState;
+import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
 /**
@@ -18,7 +20,6 @@ import com.kwhipke.blindsub.util.PhysicsUtil;
 public abstract class Submarine implements PhysObj {
 
 	private static final double COLLISION_RADIUS = 5.0;
-	
 	//The maximum health of the submarine.
 	private static final double MAX_HEALTH = 10;
 	
@@ -26,12 +27,11 @@ public abstract class Submarine implements PhysObj {
 
 	private double health;
 	
-	public Submarine(Activity parentActivity, GameMap currentMap) {
+	public Submarine(SubmarineState initialState, SoundEngine soundEngine) {
 		//Initialize the health and getting hit sound
 		this.health = MAX_HEALTH;
-		SoundEnv env = SoundEnv.getInstance(parentActivity);
 		try {
-			hit = env.addSource(SoundManager.getSoundManager(parentActivity).getSound("hit"));
+			hit = soundEngine.createSource("hit");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

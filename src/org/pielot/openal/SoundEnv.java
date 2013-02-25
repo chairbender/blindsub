@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kwhipke.blindsub.util.AudioUtil;
+
 import android.app.Activity;
 import android.util.Log;
 
@@ -20,7 +22,6 @@ public class SoundEnv {
 
 	private static final String	TAG	= "SoundEnv";
 
-	private Activity			activity;
 
 	private List<Buffer>		buffers;
 	private List<Source>		sources;
@@ -31,8 +32,7 @@ public class SoundEnv {
 	// Singleton
 	// ========================================================================
 
-	private SoundEnv(Activity activity) {
-		this.activity = activity;
+	private SoundEnv() {
 		System.loadLibrary("openal");
 		System.loadLibrary("openalwrapper");
 		this.buffers = new ArrayList<Buffer>();
@@ -43,9 +43,9 @@ public class SoundEnv {
 
 	private static SoundEnv	instance;
 
-	public static SoundEnv getInstance(Activity activity) {
+	public static SoundEnv getInstance() {
 		if (instance == null)
-			instance = new SoundEnv(activity);
+			instance = new SoundEnv();
 
 		return instance;
 	}
@@ -63,7 +63,7 @@ public class SoundEnv {
 	 * @throws IOException if the sound file cannot be found
 	 */
 	public Buffer addBuffer(String name) throws IOException {
-		Buffer buffer = Buffer.createFrom(activity, name);
+		Buffer buffer = Buffer.createFrom(name);
 		Log.d(TAG, "addBuffer( " + buffer + " )");
 		this.buffers.add(buffer);
 		return buffer;
@@ -122,13 +122,29 @@ public class SoundEnv {
 	 * this method assumes that the listener always stands upright, like a
 	 * person when walking. In fact, OpenAL also allows rotating the listener
 	 * around any of the three possible axis.
-	 * @param heading the direction the listener should face
+	 * @param heading the direction the listener should face, in degrees ( 0 is east 90 is north)
 	 */
 	public void setListenerOrientation(double heading) {
+		heading = getOpenAlOrientation(heading);
 		double zv = -Math.cos(Math.toRadians(heading));
 		double xv = Math.sin(Math.toRadians(heading));
 		this.setListenerOrientation((float) xv, 0, (float) zv);
 	}
+	
+    
+    /**
+     * Given a heading in degrees with 0 degrees being east and 90 north,
+     * convert to the openAl orientation in degrees
+     * @param subgameOrientation
+     * @return
+     */
+    private static double getOpenAlOrientation(double subgameOrientation) {
+    	double sourceHeading = subgameOrientation - 180;
+		if (sourceHeading < 0) {
+			sourceHeading = sourceHeading + 360;
+		}
+		return sourceHeading;
+    }
 
 	/**
 	 * Rotates the listener to face into the given direction.
