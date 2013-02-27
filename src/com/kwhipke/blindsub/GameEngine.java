@@ -12,7 +12,7 @@ import org.pielot.openal.Source;
 
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.Bullet;
-import com.kwhipke.blindsub.submarine.PlayerSubmarine;
+import com.kwhipke.blindsub.submarine.ControlledSubmarine;
 import com.kwhipke.blindsub.submarine.StaticSub;
 import com.kwhipke.blindsub.util.AudioUtil;
 
@@ -28,7 +28,7 @@ import android.util.Log;
  */
 public class GameEngine implements Pausable {
 
-	private PlayerSubmarine playerSub;
+	private ControlledSubmarine playerSub;
 	
 	//Stores a map between physics objects other than the player and their ping source
 	private Map<PhysObj,Source> otherObjects;
@@ -53,7 +53,7 @@ public class GameEngine implements Pausable {
 	 * @param playerSub the player's submarine. must not be null
 	 */
 	public GameEngine() {
-		this.playerSub = new PlayerSubmarine(this,0f,0f,0f);
+		this.playerSub = new ControlledSubmarine(this,0f,0f,0f);
 		this.otherObjects = new HashMap<PhysObj,Source>();
 		this.physicalObjects = new HashSet<PhysObj>();
 		
@@ -179,7 +179,7 @@ public class GameEngine implements Pausable {
 	 * returns the x and y coordinates of the player submarine.
 	 * [x,y]
 	 */
-	public PlayerSubmarine getPlayerSub() {
+	public ControlledSubmarine getPlayerSub() {
 		//Get player submarine location
 		return playerSub;
 	}

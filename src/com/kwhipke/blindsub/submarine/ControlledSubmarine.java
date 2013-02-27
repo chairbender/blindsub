@@ -8,8 +8,11 @@ import com.kwhipke.blindsub.GameEngine;
 import com.kwhipke.blindsub.OnPingListener;
 import com.kwhipke.blindsub.Pausable;
 import com.kwhipke.blindsub.PhysObj;
-import com.kwhipke.blindsub.physics.SubmarineState;
 import com.kwhipke.blindsub.sound.SoundEngine;
+import com.kwhipke.blindsub.submarine.control.SubmarineController;
+import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
+import com.kwhipke.blindsub.submarine.state.SubmarineState;
+import com.kwhipke.blindsub.submarine.type.SubmarineType;
 import com.kwhipke.blindsub.util.AudioUtil;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
@@ -26,12 +29,11 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * Handles all the logic for the submarine,
- * including playing sound.
+ * A submarine that is controlled by some controller.
  * @author Kyle
  *
  */
-public class PlayerSubmarine extends Submarine implements Pausable {
+public class ControlledSubmarine extends Submarine{
 	
 	private final static String    TAG    = "Submarine";
 
@@ -63,7 +65,7 @@ public class PlayerSubmarine extends Submarine implements Pausable {
 	private float lastGravityVector[] = new float[3];
 	private float lastGeoVector[] = new float[3];
 	
-	SubmarineState submarineState;
+	SubmarineSpatialState submarineState;
 	
 	//Sensor event listeners
 	SensorEventListener gravityListener;
@@ -84,10 +86,13 @@ public class PlayerSubmarine extends Submarine implements Pausable {
 	
 	private GameEngine currentMap;
 	
+	//Post refactor
+	private SubmarineController submarineController;
+	
 
-	public PlayerSubmarine(SubmarineState initialState, SoundEngine soundEngine) {
-		super(initialState, soundEngine);
-		this.submarineState = initialState;
+	public ControlledSubmarine(SubmarineController submarineController, SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType) {
+		super(initialState, soundEngine, submarineType);
+		this.submarineController = submarineController;
 		
 		//Get durations before anything else otherwise audio stuff will crash
 		try {

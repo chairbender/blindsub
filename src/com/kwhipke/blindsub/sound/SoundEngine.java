@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 public class SoundEngine {
 	private BufferManager buffers;
-	private static SoundEnv soundEnv;
+	private SoundEnv soundEnv;
 	
 	public SoundEngine() {
 		soundEnv = SoundEnv.getInstance();

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 
 import com.kwhipke.blindsub.R;
-import com.kwhipke.blindsub.submarine.PlayerSubmarine;
+import com.kwhipke.blindsub.submarine.ControlledSubmarine;
 import com.kwhipke.blindsub.submarine.listeners.FireTouchListener;
 import com.kwhipke.blindsub.submarine.listeners.PingTouchListener;
 import com.kwhipke.blindsub.submarine.listeners.ThrottleTouchListener;

@@ -74,7 +74,7 @@ public class StaticSub extends Submarine {
 		this.setHealth(this.getHealth() - bullet.getDamage());
 		
 		//Play distant hit sound from perspective of player sub
-		PlayerSubmarine player = currentMap.getPlayerSub();
+		ControlledSubmarine player = currentMap.getPlayerSub();
 		double x = bullet.getPosition()[0] - player.getPosition()[0];
 		double y = bullet.getPosition()[1] - player.getPosition()[1];
 		double distance = Math.sqrt(x*x + y*y);

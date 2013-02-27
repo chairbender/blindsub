@@ -1,9 +1,9 @@
 package com.kwhipke.blindsub;
 
 import com.kwhipke.blindsub.physics.PhysicsEngine;
-import com.kwhipke.blindsub.physics.SubmarineState;
 import com.kwhipke.blindsub.sound.SoundEngine;
-import com.kwhipke.blindsub.submarine.PlayerSubmarine;
+import com.kwhipke.blindsub.submarine.ControlledSubmarine;
+import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
 
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles
@@ -23,8 +23,8 @@ public class Game {
 		//Sound engine
 		SoundEngine soundEng = new SoundEngine();
 		
-		//Create a player submarine and add it to the physics simulation
-		PlayerSubmarine playerSub = new PlayerSubmarine(SubmarineState.ORIGIN,soundEng);
+		//Create a player submarine and add it to the game's physics simulation
+		ControlledSubmarine playerSub = new ControlledSubmarine(SubmarineSpatialState.ORIGIN,soundEng);
 		physEng.addObject(playerSub);
 	}
 
