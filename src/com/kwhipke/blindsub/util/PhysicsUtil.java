@@ -41,4 +41,8 @@ public class PhysicsUtil {
 		double distance = Math.sqrt(otherX * otherX + otherY * otherY);
 		return totalRadii - distance;
 	}
+
+	public static float radiansToDegrees(float f) {
+		return f * 57.2957795131f;
+	}
 }

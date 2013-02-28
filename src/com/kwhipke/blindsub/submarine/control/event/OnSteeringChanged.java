@@ -1,4 +1,6 @@
-package com.kwhipke.blindsub.submarine.control;
+package com.kwhipke.blindsub.submarine.control.event;
+
+import com.kwhipke.blindsub.submarine.control.Steering;
 
 /**
  * Callback that is invoked when the wheel of the submarine is moved to a new position

@@ -9,7 +9,10 @@ import com.kwhipke.blindsub.OnPingListener;
 import com.kwhipke.blindsub.Pausable;
 import com.kwhipke.blindsub.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngine;
-import com.kwhipke.blindsub.submarine.control.SubmarineController;
+import com.kwhipke.blindsub.submarine.control.*;
+import com.kwhipke.blindsub.submarine.control.event.OnButtonChanged;
+import com.kwhipke.blindsub.submarine.control.event.OnSteeringChanged;
+import com.kwhipke.blindsub.submarine.control.event.OnThrottleChanged;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.type.SubmarineType;
@@ -29,11 +32,11 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * A submarine that is controlled by some controller.
+ * A submarine that can be controlled by some controller.
  * @author Kyle
  *
  */
-public class ControlledSubmarine extends Submarine{
+public class ControlledSubmarine extends Submarine implements OnThrottleChanged, OnButtonChanged, OnSteeringChanged{
 	
 	private final static String    TAG    = "Submarine";
 
@@ -56,20 +59,7 @@ public class ControlledSubmarine extends Submarine{
 		DRIVING
 	};
 	
-
-	
-	//Current sensor data
-	SensorManager sensorManager;
-	private float lastOrientation[] = new float[3];
-	private float lastRotationMatrix[] = new float[9];
-	private float lastGravityVector[] = new float[3];
-	private float lastGeoVector[] = new float[3];
-	
 	SubmarineSpatialState submarineState;
-	
-	//Sensor event listeners
-	SensorEventListener gravityListener;
-	SensorEventListener geoListener;
 	
 	//Ping listeners
 	OnPingListener pingListener;
@@ -90,7 +80,7 @@ public class ControlledSubmarine extends Submarine{
 	private SubmarineController submarineController;
 	
 
-	public ControlledSubmarine(SubmarineController submarineController, SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType) {
+	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType) {
 		super(initialState, soundEngine, submarineType);
 		this.submarineController = submarineController;
 		
@@ -322,5 +312,35 @@ public class ControlledSubmarine extends Submarine{
 			return false;
 		}
 		return false;
+	}
+
+	@Override
+	public void onSteeringChanged(Steering newSteering) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onButtonPressed(SubmarineButton whichButton) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onButtonHeld(SubmarineButton whichButton) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onButtonReleased(SubmarineButton whichButton) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onThrottleChanged(ThrottlePosition newThrottle) {
+		// TODO Auto-generated method stub
+		
 	}	
 }

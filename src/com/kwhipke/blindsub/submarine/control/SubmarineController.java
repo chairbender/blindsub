@@ -1,5 +1,9 @@
 package com.kwhipke.blindsub.submarine.control;
 
+import com.kwhipke.blindsub.submarine.control.event.OnButtonChanged;
+import com.kwhipke.blindsub.submarine.control.event.OnSteeringChanged;
+import com.kwhipke.blindsub.submarine.control.event.OnThrottleChanged;
+
 
 /**
  * Provides a way to control the actions of a submarine.
@@ -24,9 +28,9 @@ public abstract class SubmarineController {
 	 * indicates that a button on the imaginary submarine's control surface has been interacted with)
 	 */
 	public SubmarineController(
-			OnSteeringChanged steeringChangedCallback,
-			OnThrottleChanged throttleChangedCallback,
-			OnButtonChanged buttonChangedCallback) {
+			final OnSteeringChanged steeringChangedCallback,
+			final OnThrottleChanged throttleChangedCallback,
+			final OnButtonChanged buttonChangedCallback) {
 		this.steeringCallback = steeringChangedCallback;
 		this.throttleCallback = throttleChangedCallback;
 		this.buttonCallback = buttonChangedCallback;

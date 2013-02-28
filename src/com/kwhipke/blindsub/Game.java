@@ -4,6 +4,9 @@ import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
+import com.kwhipke.blindsub.submarine.state.SubmarineState;
+import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
+import com.kwhipke.blindsub.submarine.type.SubmarineTypes;
 
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles
@@ -23,8 +26,10 @@ public class Game {
 		//Sound engine
 		SoundEngine soundEng = new SoundEngine();
 		
-		//Create a player submarine and add it to the game's physics simulation
-		ControlledSubmarine playerSub = new ControlledSubmarine(SubmarineSpatialState.ORIGIN,soundEng);
+		//Create a player-controlled submarine and add it to the game's physics simulation
+		ControlledSubmarine playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),soundEng,SubmarineTypes.BASIC);
+		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body. For now, each bodytype will hardcode its steering and throttle stats.
+		AndroidController androidController = new AndroidController(playerSub,playerSub,playerSub);
 		physEng.addObject(playerSub);
 	}
 

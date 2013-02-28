@@ -1,4 +1,6 @@
-package com.kwhipke.blindsub.submarine.control;
+package com.kwhipke.blindsub.submarine.control.event;
+
+import com.kwhipke.blindsub.submarine.control.SubmarineButton;
 
 /**
  * Event to fire when a buttom on the submarine's control surface is pressed.
