@@ -52,15 +52,10 @@ public class Cockpit extends BlindSubActivity {
         
         //Set the event handlers for all of the buttons.
         Button btnThrottle = (Button)findViewById(R.id.btnThrottle);
-        btnThrottle.setOnTouchListener(new ThrottleTouchListener(game));
-        
         Button btnPing = (Button)findViewById(R.id.btnPing);
-        btnPing.setOnTouchListener(new PingTouchListener(game));
-        
         Button btnFire = (Button)findViewById(R.id.btnFire);
-        btnFire.setOnTouchListener(new FireTouchListener(game));
         
-        game.start();
+        game.start(btnPing,btnFire,btnThrottle);
     }
     
     @Override

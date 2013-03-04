@@ -1,6 +1,6 @@
 package com.kwhipke.blindsub.sound;
 
-import com.kwhipke.blindsub.PhysObj;
+import com.kwhipke.blindsub.physics.PhysObj;
 
 /**
  * A physobj that makes sound.

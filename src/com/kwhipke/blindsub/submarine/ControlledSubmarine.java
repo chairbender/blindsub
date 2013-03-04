@@ -7,7 +7,10 @@ import org.pielot.openal.*;
 import com.kwhipke.blindsub.GameEngine;
 import com.kwhipke.blindsub.OnPingListener;
 import com.kwhipke.blindsub.Pausable;
-import com.kwhipke.blindsub.PhysObj;
+import com.kwhipke.blindsub.physics.CollisionBounds;
+import com.kwhipke.blindsub.physics.PhysObj;
+import com.kwhipke.blindsub.physics.Position;
+import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.control.*;
 import com.kwhipke.blindsub.submarine.control.event.OnButtonChanged;
@@ -15,6 +18,7 @@ import com.kwhipke.blindsub.submarine.control.event.OnSteeringChanged;
 import com.kwhipke.blindsub.submarine.control.event.OnThrottleChanged;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;
+import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineType;
 import com.kwhipke.blindsub.util.AudioUtil;
 import com.kwhipke.blindsub.util.PhysicsUtil;
@@ -37,11 +41,6 @@ import android.util.Log;
  *
  */
 public class ControlledSubmarine extends Submarine implements OnThrottleChanged, OnButtonChanged, OnSteeringChanged{
-	
-	private final static String    TAG    = "Submarine";
-
-    private SoundEnv env;
-
     private Source ping;
     private Source engineStart;
     private Source engineRun;
@@ -49,96 +48,13 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
     private Source torpedoLaunch;
     private Source bubbles;
 	
-	Context context;
-	
-	
-	/*state related stuff*/
-	private SubState state = SubState.STOPPED;
-	private enum SubState {
-		STOPPED,
-		DRIVING
-	};
-	
-	SubmarineSpatialState submarineState;
-	
-	//Ping listeners
-	OnPingListener pingListener;
-	
-	//Stats in meters (our atomic physics unit) per second and degrees
-	private static final double METERS_PER_SECOND = 1.0;
-	private static final double MAX_DEGREES_PER_SECOND = 30; //max turning rate
-
-	private static final double COLLISION_RADIUS = 5.0;
-
-	private int orientation = 0;
-
-	private long startupSoundLengthInMillis;
-	
-	private GameEngine currentMap;
-	
 	//Post refactor
-	private SubmarineController submarineController;
-	
+	SubmarineSpatialState submarineState;
+	SubmarineStatus submarineStatus;
 
 	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType) {
 		super(initialState, soundEngine, submarineType);
-		this.submarineController = submarineController;
-		
-		//Get durations before anything else otherwise audio stuff will crash
-		try {
-			startupSoundLengthInMillis = AudioUtil.getSoundDuration("startup");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-				
-        
-        /*
-         * To actually play a sound and place it somewhere in the sound
-         * environment, we have to create sources. Each source has its own
-         * parameters, such as 3D position or pitch. Several sources can
-         * share a single buffer.
-         */
-		try {
-			this.engineStart = env.addSource(manager.getSound("startup"));
-			this.engineRun = env.addSource(manager.getSound("run"));
-			this.engineStop = env.addSource(manager.getSound("stop"));
-	        this.ping = env.addSource(manager.getSound("ping"));
-	        this.torpedoLaunch = env.addSource(manager.getSound("torpedofire"));
-	        this.bubbles = env.addSource(manager.getSound("bubbles"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        //Register the handlers for getting sensor data
-        
-        //define our listeners
-        gravityListener = new SensorEventListener() {
-        	@Override
-			public void onAccuracyChanged(Sensor arg0, int arg1) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onSensorChanged(SensorEvent arg0) {
-				lastGravityVector = arg0.values;
-			}
-        };
-        
-        geoListener = new SensorEventListener() {
-        	@Override
-			public void onAccuracyChanged(Sensor arg0, int arg1) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void onSensorChanged(SensorEvent arg0) {
-				lastGeoVector = arg0.values;
-			}
-        };
-        
-        sensorManager = (SensorManager)parentActivity.getSystemService(parentActivity.SENSOR_SERVICE);
-        this.onResume();
+		this.submarineStatus = new SubmarineStatus();
 	}
 	
 	/**
@@ -241,52 +157,12 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 			this.y = this.y + components[1]*elapsedSeconds;
 		}
 	}
-	
-	@Override
-	public void onPause() {
-		sensorManager.unregisterListener(gravityListener);
-		sensorManager.unregisterListener(geoListener);
-	}
-	
-	@Override
-	public void onResume() {
-		Sensor gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        Sensor geoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-		sensorManager.registerListener(gravityListener, gravitySensor,SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(geoListener, geoSensor,SensorManager.SENSOR_DELAY_GAME);
-	}
-	
-	public void setOnPingListener(OnPingListener toAdd) {
-		this.pingListener = toAdd;
-	}
 
 	public double[] getPosition() {
 		double result[] = new double[2];
 		result[0] = this.x;
 		result[1] = this.y;
 		return result;
-	}
-	
-	//gets the heading in 360 degrees with 0 being east
-	public double getOrientation() {
-		return heading;
-	}
-
-	@Override
-	public boolean resolveCollision(PhysObj other) {
-		return this.resolveCollision(other, METERS_PER_SECOND, heading);
-		
-	}
-
-	@Override
-	protected void setX(double x) {
-		this.x = x;
-		
-	}
-
-	@Override
-	protected void setY(double y) {
-		this.y = y;
 	}
 
 	@Override
@@ -342,5 +218,22 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 	public void onThrottleChanged(ThrottlePosition newThrottle) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public VelocityVector getVelocityVector() {
+		return new VelocityVector(submarineType.getTopSpeed().throttledBy(submarineStatus.getThrottle()),submarineState.getHeading());
+	}
+
+	@Override
+	public boolean doCollision(PhysObj other) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public CollisionBounds getCollisionBounds() {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 }

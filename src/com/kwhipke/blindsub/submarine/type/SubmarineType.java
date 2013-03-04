@@ -1,5 +1,8 @@
 package com.kwhipke.blindsub.submarine.type;
 
+import com.kwhipke.blindsub.physics.Heading;
+import com.kwhipke.blindsub.submarine.stats.Speed;
+
 
 /**
  * Describes a type of submarine (like, a model of submarine).
@@ -15,5 +18,13 @@ public class SubmarineType {
 	public SubmarineType(BodyType bodyType, Loadout loadout) {
 		this.bodyType = bodyType;
 		this.loadout = loadout;
+	}
+
+	/**
+	 * 
+	 * @return the top speed of the submarine
+	 */
+	public Speed getTopSpeed() {
+		return bodyType.getTopSpeed();
 	}
 }

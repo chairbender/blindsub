@@ -1,6 +1,6 @@
 package com.kwhipke.blindsub.submarine;
 
-import com.kwhipke.blindsub.PhysObj;
+import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
 /**

@@ -1,7 +1,7 @@
 package com.kwhipke.blindsub.submarine.state;
 
-import com.kwhipke.blindsub.physics.SubmarineFacing;
-import com.kwhipke.blindsub.physics.SubmarinePosition;
+import com.kwhipke.blindsub.physics.Heading;
+import com.kwhipke.blindsub.physics.Position;
 
 /**
  * Encapsulates all that is needed to represent the Submarine's state
@@ -9,14 +9,18 @@ import com.kwhipke.blindsub.physics.SubmarinePosition;
  *
  */
 public class SubmarineSpatialState {
-	private SubmarineFacing facing;
-	private SubmarinePosition position;
+	private Heading facing;
+	private Position position;
 	
-	public static final SubmarineSpatialState ORIGIN = new SubmarineSpatialState(SubmarinePosition.ORIGIN,new SubmarineFacing(0));
+	public static final SubmarineSpatialState ORIGIN = new SubmarineSpatialState(Position.ORIGIN,new Heading(0));
 	
-	public SubmarineSpatialState(SubmarinePosition initPos, SubmarineFacing initFacing) {
+	public SubmarineSpatialState(Position initPos, Heading initFacing) {
 		this.position = initPos;
 		this.facing = initFacing;
+	}
+	
+	public Heading getHeading() {
+		return facing;
 	}
 	
 }

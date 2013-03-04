@@ -1,8 +1,12 @@
 package com.kwhipke.blindsub;
 
+import android.widget.Button;
+
 import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
+import com.kwhipke.blindsub.submarine.control.AndroidController;
+import com.kwhipke.blindsub.submarine.control.SteeringSensorReader;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
@@ -20,7 +24,13 @@ public class Game {
 		
 	}
 	
-	public void start() {
+	/**
+	 * Buttons to use for the player submarine's controls
+	 * @param btnPing
+	 * @param btnFire
+	 * @param btnThrottle
+	 */
+	public void start(Button btnPing, Button btnFire, Button btnThrottle) {
 		//Create a physics engine to handle the physical interactions
 		PhysicsEngine physEng = new PhysicsEngine();
 		//Sound engine
@@ -28,8 +38,8 @@ public class Game {
 		
 		//Create a player-controlled submarine and add it to the game's physics simulation
 		ControlledSubmarine playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),soundEng,SubmarineTypes.BASIC);
-		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body. For now, each bodytype will hardcode its steering and throttle stats.
-		AndroidController androidController = new AndroidController(playerSub,playerSub,playerSub);
+		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body and engine.
+		AndroidController androidController = new AndroidController(new SteeringSensorReader(),btnThrottle,btnPing,btnFire,playerSub,playerSub,playerSub);
 		physEng.addObject(playerSub);
 	}
 

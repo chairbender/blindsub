@@ -10,6 +10,7 @@ import org.pielot.openal.Buffer;
 import org.pielot.openal.SoundEnv;
 import org.pielot.openal.Source;
 
+import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.Bullet;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
