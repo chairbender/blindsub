@@ -233,7 +233,6 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 
 	@Override
 	public CollisionBounds getCollisionBounds() {
-		// TODO Auto-generated method stub
-		return null;
+		return submarineType.getCollisionBounds();
 	}	
 }

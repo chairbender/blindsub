@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.submarine.type;
 
+import com.kwhipke.blindsub.physics.CollisionBounds;
 import com.kwhipke.blindsub.physics.Heading;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 
@@ -26,5 +27,13 @@ public class SubmarineType {
 	 */
 	public Speed getTopSpeed() {
 		return bodyType.getTopSpeed();
+	}
+
+	/**
+	 * 
+	 * @return the collision model of the submarine
+	 */
+	public CollisionBounds getCollisionBounds() {
+		return bodyType.getCollisionBounds();
 	}
 }
