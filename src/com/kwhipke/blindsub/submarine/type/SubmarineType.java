@@ -3,6 +3,7 @@ package com.kwhipke.blindsub.submarine.type;
 import com.kwhipke.blindsub.physics.CollisionBounds;
 import com.kwhipke.blindsub.physics.Heading;
 import com.kwhipke.blindsub.submarine.stats.Speed;
+import com.kwhipke.blindsub.submarine.stats.TurningRadius;
 
 
 /**
@@ -35,5 +36,9 @@ public class SubmarineType {
 	 */
 	public CollisionBounds getCollisionBounds() {
 		return bodyType.getCollisionBounds();
+	}
+
+	public TurningRadius getTurningRadius() {
+		return bodyType.getTurningRadius();
 	}
 }

@@ -14,4 +14,11 @@ public class Steering {
 		this.steering = steering;
 	}
 	
+	/**
+	 * 
+	 * @return the scalar representing the wheel position. -1 is farthest left, 1 is farthest right
+	 */
+	public double getSteeringScalar() {
+		return steering;
+	}
 }

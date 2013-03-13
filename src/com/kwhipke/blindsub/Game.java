@@ -32,7 +32,7 @@ public class Game {
 	 */
 	public void start(Button btnPing, Button btnFire, Button btnThrottle) {
 		//Create a physics engine to handle the physical interactions
-		PhysicsEngine physEng = new PhysicsEngine();
+		PhysicsEngine physEng = new PhysicsEngine(10);
 		//Sound engine
 		SoundEngine soundEng = new SoundEngine();
 		

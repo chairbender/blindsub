@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.submarine;
 
+import com.kwhipke.blindsub.submarine.stats.TurningRadius;
 import java.io.IOException;
 
 import org.pielot.openal.*;
@@ -9,6 +10,7 @@ import com.kwhipke.blindsub.OnPingListener;
 import com.kwhipke.blindsub.Pausable;
 import com.kwhipke.blindsub.physics.CollisionBounds;
 import com.kwhipke.blindsub.physics.PhysObj;
+import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.physics.Position;
 import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.sound.SoundEngine;
@@ -52,7 +54,7 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 	SubmarineSpatialState submarineState;
 	SubmarineStatus submarineStatus;
 
-	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType) {
+	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType, PhysicsEngine containingPhysicsEngine) {
 		super(initialState, soundEngine, submarineType);
 		this.submarineStatus = new SubmarineStatus();
 	}
@@ -121,41 +123,10 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 
 	@Override
 	public void tick(long elapsedMillis) {
-		if (state == SubState.DRIVING) {
-			double elapsedSeconds = elapsedMillis / 1000.0;
-			float roll = 0;
-			//Compute heading
-			if (SensorManager.getRotationMatrix(lastRotationMatrix, null,
-                   lastGravityVector, lastGeoVector)) {
-				SensorManager.getOrientation(lastRotationMatrix, lastOrientation);
-				
-				//Convert the tilt to degrees
-				roll = lastOrientation[1] * 57.2957795f;
-				//0 to 90 is turning left, 0 to -90 is turning right
-				if (roll > 0) {
-					roll = Math.min(roll, 70);
-					heading += this.MAX_DEGREES_PER_SECOND * (roll / 70.0) * elapsedSeconds;
-				} else {
-					roll = Math.max(roll, -70);
-					heading -= this.MAX_DEGREES_PER_SECOND * (roll / -70.0) * elapsedSeconds; 
-				}
-				
-				//loop heading around so it's always between 0 and 360
-				if (heading >= 360.0) {
-					heading = heading - 360;
-				} else if (heading < 0) {
-					heading = heading + 360;
-				}
-				
-				//Update its orientation
-				env.setListenerOrientation(AudioUtil.getOpenAlOrientation(heading));
-			}
-
-			//Calculate the horizontal and vertical components of the velocity vector
-			double components[] = PhysicsUtil.getVelocityComponents(heading,METERS_PER_SECOND);
-			this.x = this.x + components[0]*elapsedSeconds;
-			this.y = this.y + components[1]*elapsedSeconds;
-		}
+		//Update the heading based on the position of the steering wheel
+		//and the turning radius of the sub.
+		submarineState.steer(submarineStatus.currentSteering(),submarineType.getTurningRadius(),submarineType.getTopSpeed().throttledBy(submarineStatus.getThrottle()),elapsedMillis);
+		
 	}
 
 	public double[] getPosition() {
@@ -165,40 +136,17 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 		return result;
 	}
 
-	@Override
-	protected boolean resolveBulletHit(Bullet bullet) {
-		//Can't be hit by own bullets
-		if (bullet.getCreator() != this) {
-			//Play a mechanical hit sound and do some damage to this
-			//Play the hit based on the side of the sub it hit
-			
-			//Do damage
-			this.setHealth(this.getHealth() - bullet.getDamage());
-			
-			double x = bullet.getPosition()[0] - this.getPosition()[0];
-			double y = bullet.getPosition()[1] - this.getPosition()[1];
-			
-			hit.setPosition((float)x, (float)y, 0f);
-			hit.play(false);
-			
-			//if dead now, return false.
-			if (this.getHealth() <= 0) {
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
 
 	@Override
 	public void onSteeringChanged(Steering newSteering) {
-		// TODO Auto-generated method stub
-		
+		submarineStatus.changeSteering(newSteering);
 	}
 
 	@Override
 	public void onButtonPressed(SubmarineButton whichButton) {
-		// TODO Auto-generated method stub
+		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
+			//Create a missile with the same heading as this.
+		}
 		
 	}
 
@@ -216,8 +164,7 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 
 	@Override
 	public void onThrottleChanged(ThrottlePosition newThrottle) {
-		// TODO Auto-generated method stub
-		
+		submarineStatus.changeThrottle(newThrottle);
 	}
 
 	@Override

@@ -22,12 +22,11 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * Represents the state of a single game and the map every sub is playing in.
- * Handles updating the game state and interactions between game objects.
+ * Handles updating the state of a single game.
  * @author Kyle
  *
  */
-public class GameEngine implements Pausable {
+public class GameEngine {
 
 	private ControlledSubmarine playerSub;
 	

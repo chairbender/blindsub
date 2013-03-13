@@ -39,4 +39,8 @@ public class BodyType {
 	public CollisionBounds getCollisionBounds() {
 		return characteristics.getCollisionBounds();
 	}
+
+	public TurningRadius getTurningRadius() {
+		return characteristics.getTurningRadius();
+	}
 }

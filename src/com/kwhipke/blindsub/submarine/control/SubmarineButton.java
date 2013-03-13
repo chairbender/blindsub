@@ -17,6 +17,10 @@ public class SubmarineButton {
 	public SubmarineButton(SubmarineButtonType type) {
 		this.type = type;
 	}
+	
+	public SubmarineButtonType getButtonType() {
+		return type;
+	}
 
 
 }
