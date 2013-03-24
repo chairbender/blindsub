@@ -14,6 +14,7 @@ import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.physics.Position;
 import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.sound.SoundEngine;
+import com.kwhipke.blindsub.sound.submarine.SubmarineSounds;
 import com.kwhipke.blindsub.submarine.control.*;
 import com.kwhipke.blindsub.submarine.control.event.OnButtonChanged;
 import com.kwhipke.blindsub.submarine.control.event.OnSteeringChanged;
@@ -43,13 +44,6 @@ import android.util.Log;
  *
  */
 public class ControlledSubmarine extends Submarine implements OnThrottleChanged, OnButtonChanged, OnSteeringChanged{
-    private Source ping;
-    private Source engineStart;
-    private Source engineRun;
-    private Source engineStop;
-    private Source torpedoLaunch;
-    private Source bubbles;
-	
 	//Post refactor
 	SubmarineSpatialState submarineState;
 	SubmarineStatus submarineStatus;
@@ -57,68 +51,6 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType, PhysicsEngine containingPhysicsEngine) {
 		super(initialState, soundEngine, submarineType);
 		this.submarineStatus = new SubmarineStatus();
-	}
-	
-	/**
-	 * Start the sub moving
-	 */
-	public void drive() {
-		if (state != SubState.DRIVING) {
-			//Play the engine start sound and follow it with the engine sustain sound loop
-			state = SubState.DRIVING;
-			engineStart.play(false);
-			//Have some overlap between the start and and run loop
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-					if (state == SubState.DRIVING) {
-						engineRun.play(true);
-					}
-				}
-			}, startupSoundLengthInMillis - 200);
-			
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-					if (state == SubState.DRIVING) {
-						engineStart.stop();
-					}
-				}
-			}, startupSoundLengthInMillis);
-			//play some moving through water sounds
-			new Handler().postDelayed(new Runnable() {
-				public void run() {
-					if (state == SubState.DRIVING) {
-						bubbles.play(true);
-					}
-				}
-			}, startupSoundLengthInMillis + 500);
-		}
-	}
-	
-	/**
-	 * Stop the sub
-	 */
-	public void stop() {
-		if (state != SubState.STOPPED) {
-			//play the engine stop sound and stop the engine start sound
-			state = SubState.STOPPED;
-			engineStart.stop();
-			engineRun.stop();
-			engineStop.play(false);
-			bubbles.stop();
-		}
-	}
-	
-	public void ping() {
-		this.ping.play(false);
-		if (pingListener != null) {
-			this.pingListener.onPing(this.x, this.y);
-		}
-		Log.i(TAG,"x, y: " + this.x + ", " + this.y);
-	}
-	
-	public void fire() {
-		this.torpedoLaunch.play(false);
-		currentMap.addBullet(new Torpedo(this.x,this.y,this.heading,this));
 	}
 
 	@Override
@@ -129,14 +61,6 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 		
 	}
 
-	public double[] getPosition() {
-		double result[] = new double[2];
-		result[0] = this.x;
-		result[1] = this.y;
-		return result;
-	}
-
-
 	@Override
 	public void onSteeringChanged(Steering newSteering) {
 		submarineStatus.changeSteering(newSteering);
@@ -146,8 +70,9 @@ public class ControlledSubmarine extends Submarine implements OnThrottleChanged,
 	public void onButtonPressed(SubmarineButton whichButton) {
 		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
 			//Create a missile with the same heading as this.
+			//TODO: implement spawning the missile
+			soundEngine.playSound(SubmarineSounds.TORPEDO_FIRING, this);
 		}
-		
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.kwhipke.blindsub.physics;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -22,7 +24,7 @@ import java.util.Set;
 public class PhysicsEngine {	
 	private boolean isPaused = false;
 	private final long millisecondsPerTick;
-	Set<TrackedPhysicalObject> trackedObjects;
+	Map<PhysObj,TrackedPhysicalObject> trackedObjects;
 
 	/**
 	 * 
@@ -30,7 +32,7 @@ public class PhysicsEngine {
 	 */
 	public PhysicsEngine(long millisecondsPerTick) {
 		this.millisecondsPerTick = millisecondsPerTick;
-		this.trackedObjects = new HashSet<TrackedPhysicalObject>();
+		this.trackedObjects = new HashMap<PhysObj,TrackedPhysicalObject>();
 	}
 	
 	/**
@@ -38,7 +40,7 @@ public class PhysicsEngine {
 	 * @param toAdd physics object to start tracking in this simulation. not safe to call while ticking, currently.
 	 */
 	public void addObject(PhysObj toAdd, Position startingPosition) {
-		trackedObjects.add(new TrackedPhysicalObject(toAdd,startingPosition));
+		trackedObjects.put(toAdd,new TrackedPhysicalObject(toAdd,startingPosition));
 	}
 	
 	/**
@@ -50,7 +52,7 @@ public class PhysicsEngine {
 		 * For each object, get its speed and direction. Then calculate its new position after millisPerTick milliseconds.
 		 * Set the new position of it. Chek for collissions. If it collides with another object, move it back to where it was and run the collision handler.
 		 */
-		for (TrackedPhysicalObject obj : trackedObjects) {
+		for (TrackedPhysicalObject obj : trackedObjects.values()) {
 			VelocityVector velocityVector = obj.getVelocityVector();
 			Position oldPosition = obj.getPosition();
 			Position newPosition = velocityVector.displacement(millisecondsPerTick);
@@ -78,7 +80,7 @@ public class PhysicsEngine {
 	//if obj collides with anything else add it to the set and return it
 	private Set<TrackedPhysicalObject> checkCollisions(TrackedPhysicalObject obj) {
 		Set<TrackedPhysicalObject> result = new HashSet<TrackedPhysicalObject>();
-		for (TrackedPhysicalObject other : trackedObjects) {
+		for (TrackedPhysicalObject other : trackedObjects.values()) {
 			if (other != obj) {
 				CollisionBounds objBounds = obj.getCollisionBounds();
 				CollisionBounds otherBounds = obj.getCollisionBounds();
@@ -110,6 +112,16 @@ public class PhysicsEngine {
 				}
 			}
 		}).start();
+	}
+	
+	/**
+	 * 
+	 * @param toPosition PhysObj to get the position of
+	 * @return the position of the PhysObj tracked by this physics engine that equals toPosition (equals by reference, so it must
+	 * equal the PhysObj you passed in in the addObjet method). Null if none found
+	 */
+	public Position getPositionOfPhysObj(PhysObj toPosition) {
+		return trackedObjects.get(toPosition) == null ? null : trackedObjects.get(toPosition).getPosition();
 	}
 	
 	/**
