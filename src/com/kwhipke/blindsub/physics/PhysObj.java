@@ -1,5 +1,7 @@
 package com.kwhipke.blindsub.physics;
 
+import java.util.Set;
+
 /**
  * Interface every physics object must implement. Also lets objects update their state
  * the basic measurement of physics time is ticks.
@@ -34,4 +36,5 @@ public interface PhysObj {
 	 * param elapsedMilliseconds amount of milliseconds object should track as having elapsed during this state update.
 	 */
 	public void tick(long elapsedMilliseconds);
+	
 }

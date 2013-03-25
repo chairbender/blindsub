@@ -9,7 +9,7 @@ import com.kwhipke.blindsub.physics.PhysObj;
  */
 public abstract class SoundPhysicalObject implements PhysObj {
 	
-	private SoundEngine soundEngine;
+	protected SoundEngine soundEngine;
 	
 	/**
 	 * 
