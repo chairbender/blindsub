@@ -11,10 +11,13 @@ import com.kwhipke.blindsub.*;
 import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.sound.SoundPhysicalObject;
+import com.kwhipke.blindsub.submarine.control.Steering;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineType;
+import com.kwhipke.blindsub.units.Degrees;
+import com.kwhipke.blindsub.units.Meters;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
 /**
@@ -32,4 +35,5 @@ public abstract class Submarine extends SoundPhysicalObject {
 		this.currentState = initialState;
 		this.submarineType = submarineType;
 	}
+
 }

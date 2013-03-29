@@ -27,17 +27,14 @@ public class SubmarineSpatialState {
 	public Heading getHeading() {
 		return facing;
 	}
-	
+
 	/**
-	 * Update the heading based on the position of the wheel, the minimum turning radius of the sub, the speed of the sub, and the elapsed time to hold that steering for
-	 * @param currentSteering position of the wheel
-	 * @param turningRadius minimum turning radius of the sub
-	 * @param elapsedMilliseconds amount of time to hold that steering and simulate for
+	 * Change the heading by the headingChange degrees (positive or negative). WRaps around if it goes below zero or above 360
+	 * @param headingChange
 	 */
-	public void steer(Steering currentSteering, TurningRadius turningRadius,Speed speed,long elapsedMilliseconds) {
-		//Figure out how far the sub would travel. Then make it travel around the circle described by the turning radius.
-		Meters displacement = new Meters(speed.displacement(elapsedMilliseconds));
-		Degrees headingChance = turningRadius.getHeadingChange(currentSteering,displacement);
+	public void adjustHeading(Degrees headingChange) {
+		facing.adjustBy(headingChange);
+		
 	}
 	
 }

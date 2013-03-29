@@ -32,11 +32,13 @@ public abstract class ShootingSubmarine extends Submarine {
 	}
 	
 	/**
-	 * 
+	 * Shoot the currently equipped missile in the direction this sub is facing.
 	 * @param direction direction to shoot the missile from
 	 */
-	protected void fire(Heading direction) {
-		//TODO: Create missile class. Get missile from submarine type
+	protected void fire() {
+		//TODO: Acquire the torpedo type from the submarinetype
+		Torpedo torpedo = new Torpedo(this.currentState.getCurrentHeading(),this);
+		physicsEngine.addObject(torpedo, physicsEngine.getPositionOfPhysObj(this));
 	}
 	
 	

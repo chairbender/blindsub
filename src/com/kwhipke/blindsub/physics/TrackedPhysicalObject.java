@@ -51,9 +51,17 @@ public class TrackedPhysicalObject {
 	 * Triggers the collision for the tracked physical object
 	 * @param other other object to handle a collision with
 	 */
-	public void doCollision(TrackedPhysicalObject other) {
-		// TODO Auto-generated method stub
+	public boolean doCollision(TrackedPhysicalObject other) {
+		return trackedObject.doCollision(other.trackedObject);
 		
+	}
+	
+	/**
+	 * 
+	 * @return the phys obj being tracked
+	 */
+	public PhysObj getPhysObj() {
+		return trackedObject;
 	}
 	
 }
