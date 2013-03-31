@@ -8,11 +8,14 @@ import org.pielot.openal.Buffer;
 import org.pielot.openal.SoundEnv;
 
 /**
- * Manages loading audio buffers.
+ * Manages loading audio buffers. There's only one instance of this for the whole project.
  * @author Kyle
  *
  */
 class BufferManager {
+	//Never need to have more than one
+	private static BufferManager bufferManager;
+	
 	private Map<String, Buffer> buffers;
 	SoundEnv env;
 	
@@ -20,8 +23,21 @@ class BufferManager {
 	 * 
 	 * @param env the sound environment that the buffers will be loaded in
 	 */
-	public BufferManager(SoundEnv env) {
+	private BufferManager() {
 		buffers = new HashMap<String,Buffer>();
+		env = SoundEnv.getInstance();
+	}
+	
+	/**
+	 * 
+	 * @return the buffer manager
+	 */
+	public static BufferManager getInstance() {
+		if (bufferManager == null) {
+			return new BufferManager();
+		} else {
+			return bufferManager;
+		}
 	}
 	/**
 	 * 

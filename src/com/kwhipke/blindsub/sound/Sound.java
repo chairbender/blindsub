@@ -1,5 +1,9 @@
 package com.kwhipke.blindsub.sound;
 
+import java.io.IOException;
+
+import org.pielot.openal.Buffer;
+
 /**
  * Represents a sound that can be played. Sounds are referenced by name.
  * Just look in the "assets" folder and remove the .wav to get the name of the sound.
@@ -17,6 +21,15 @@ public class Sound {
 	 */
 	public Sound(String soundName) {
 		this.soundName = soundName;
+	}
+	/**
+	 * 
+	 * @return uses the singleton buffermanager to get the Buffer (i,e. the audio data for the sound)
+	 * based on the soundName.
+	 * @throws IOException if error loading the buffer from the sound's file
+	 */
+	public Buffer getBuffer() throws IOException {
+		return BufferManager.getInstance().getSound(soundName);
 	}
 	
 }
