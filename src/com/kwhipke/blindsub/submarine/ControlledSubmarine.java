@@ -43,35 +43,28 @@ import android.util.Log;
  * @author Kyle
  *
  */
-public class ControlledSubmarine extends Submarine implements OnThrottleChanged, OnButtonChanged, OnSteeringChanged{
-	//Post refactor
-	SubmarineSpatialState submarineState;
-	SubmarineStatus submarineStatus;
+public class ControlledSubmarine extends ShootingSubmarine implements OnThrottleChanged, OnButtonChanged, OnSteeringChanged{
 
 	public ControlledSubmarine(SubmarineState initialState, SoundEngine soundEngine, SubmarineType submarineType, PhysicsEngine containingPhysicsEngine) {
-		super(initialState, soundEngine, submarineType);
-		this.submarineStatus = new SubmarineStatus();
+		super(initialState, soundEngine, submarineType,containingPhysicsEngine);
 	}
 
 	@Override
 	public void tick(long elapsedMillis) {
-		//Update the heading based on the position of the steering wheel
-		//and the turning radius of the sub.
-		submarineState.steer(submarineStatus.currentSteering(),submarineType.getTurningRadius(),submarineType.getTopSpeed().throttledBy(submarineStatus.getThrottle()),elapsedMillis);
-		
+		//Update the state
+		currentState.tick(submarineType,elapsedMillis);
 	}
 
 	@Override
 	public void onSteeringChanged(Steering newSteering) {
-		submarineStatus.changeSteering(newSteering);
+		currentState.setSteering(newSteering);
 	}
 
 	@Override
 	public void onButtonPressed(SubmarineButton whichButton) {
 		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
-			//Create a missile with the same heading as this.
-			//TODO: implement spawning the missile
 			soundEngine.playSound(SubmarineSounds.TORPEDO_FIRING, this);
+			this.fire();
 		}
 	}
 

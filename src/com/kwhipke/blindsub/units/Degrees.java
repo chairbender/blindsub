@@ -14,4 +14,13 @@ public class Degrees {
 	public double getDegrees() {
 		return degrees;
 	}
+
+	/**
+	 * adds toAdd to the heading. wraps if lt 0 or gt 360
+	 * @param headingChange
+	 */
+	public void add(Degrees toAdd) {
+		this.degrees += toAdd.getDegrees();
+		this.degrees = this.degrees % 360;
+	}
 }

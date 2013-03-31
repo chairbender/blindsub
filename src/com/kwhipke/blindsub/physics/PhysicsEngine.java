@@ -71,9 +71,18 @@ public class PhysicsEngine {
 	 * @param others
 	 */
 	private void triggerCollisions(TrackedPhysicalObject obj, Set<TrackedPhysicalObject> others) {
+		Set<TrackedPhysicalObject> toRemove = new HashSet<TrackedPhysicalObject>();
 		for (TrackedPhysicalObject other : others) {
-			obj.doCollision(other);
-			other.doCollision(obj);
+			if (obj.doCollision(other)) {
+				toRemove.add(obj);
+			}
+			if (other.doCollision(obj)) {
+				toRemove.add(other);
+			}
+		}
+		
+		for (TrackedPhysicalObject toDelete : toRemove) {
+			trackedObjects.remove(toDelete.getPhysObj());
 		}
 	}
 	

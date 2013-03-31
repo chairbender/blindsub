@@ -1,6 +1,11 @@
 package com.kwhipke.blindsub.submarine;
 
+import com.kwhipke.blindsub.physics.CollisionBounds;
+import com.kwhipke.blindsub.physics.Heading;
 import com.kwhipke.blindsub.physics.PhysObj;
+import com.kwhipke.blindsub.physics.VelocityVector;
+import com.kwhipke.blindsub.submarine.stats.Speed;
+import com.kwhipke.blindsub.units.Meters;
 import com.kwhipke.blindsub.util.PhysicsUtil;
 
 /**
@@ -8,15 +13,15 @@ import com.kwhipke.blindsub.util.PhysicsUtil;
  * @author Kyle
  *
  */
-public class Torpedo extends Bullet{
+public class Torpedo implements PhysObj, DamagingObject{
 
-	private static final double DAMAGE = 5.0;
-	private static final double METERS_PER_SECOND = 20;
-	private static final double RADIUS = 1.5;
+	private static final Damage DAMAGE = new Damage(5.0);
+	private static final Speed SPEED = new Speed(new Meters(30));
+	private static final Meters RADIUS = new Meters(1.5);
 	
-	private double x, y;
-	private double heading;
-	
+	private Heading heading;
+	private PhysObj creator;
+	private VelocityVector vector;
 	/**
 	 * 
 	 * @param startX
@@ -24,49 +29,38 @@ public class Torpedo extends Bullet{
 	 * @param heading in degrees (0 being east 90 being north)
 	 * @param creator the creator of this object
 	 */
-	public Torpedo(double startX, double startY, double heading, PhysObj creator) {
-		super(creator);
-		this.x = x;
-		this.y = y;
-		this.heading = heading;
+	public Torpedo(Heading initialHeading, PhysObj creator) {
+		this.heading = initialHeading;
+		this.creator = creator;
+		this.vector = new VelocityVector(SPEED,initialHeading);
 	}
-	
+
 	@Override
-	public void tick(long elapsedMillis) {
-		double elapsedSeconds = elapsedMillis / 1000.0;
-		//Move it in the direction of its heading
-		double[] velocityVec = PhysicsUtil.getVelocityComponents(heading, METERS_PER_SECOND);
-		this.x += elapsedSeconds * velocityVec[0];
-		this.y += elapsedSeconds * velocityVec[1];
-		
-	}
-	
-	public double getDamage() {
+	public Damage getDamage() {
 		return DAMAGE;
 	}
 
 	@Override
-	public double[] getPosition() {
-		double result[] = new double[2];
-		result[0] = this.x;
-		result[1] = this.y;
-		return result;
+	public VelocityVector getVelocityVector() {
+		return vector;
 	}
 
 	@Override
-	public double getRadius() {
-		return RADIUS;
-	}
-
-	@Override
-	public boolean resolveCollision(PhysObj other) {
-		//Destroy this object if it collides with others
-		//Only responsible for its own state!
-		if (PhysicsUtil.getOverlap(this, other) > 0) {
+	public boolean doCollision(PhysObj other) {
+		if (other != creator) {
 			return true;
-		} else {
-			return false;
 		}
+		return false;
+	}
+
+	@Override
+	public CollisionBounds getCollisionBounds() {
+		return new CollisionBounds(RADIUS);
+	}
+
+	@Override
+	public void tick(long elapsedMilliseconds) {
+		// do nothing
 		
 	}
 

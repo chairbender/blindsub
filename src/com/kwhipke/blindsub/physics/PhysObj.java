@@ -21,6 +21,7 @@ public interface PhysObj {
 	 * and strictly forbidden from messing with the other object's state. This method
 	 * will be invoked on both objects when a collision happens.
 	 * @param other
+	 * @return true if the object should be removed from the simulation. false otherwise
 	 */
 	public boolean doCollision(PhysObj other);
 
