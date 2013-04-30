@@ -1,5 +1,7 @@
 package com.kwhipke.blindsub.submarine.control.event;
 
+import java.io.IOException;
+
 import com.kwhipke.blindsub.submarine.control.SubmarineButton;
 
 /**
@@ -9,7 +11,7 @@ import com.kwhipke.blindsub.submarine.control.SubmarineButton;
  *
  */
 public interface OnButtonChanged {
-	public void onButtonPressed(SubmarineButton whichButton);
+	public void onButtonPressed(SubmarineButton whichButton) throws IOException;
 	public void onButtonHeld(SubmarineButton whichButton);
 	public void onButtonReleased(SubmarineButton whichButton);
 }

@@ -2,6 +2,8 @@ package com.kwhipke.blindsub.submarine.type;
 
 import com.kwhipke.blindsub.physics.CollisionBounds;
 import com.kwhipke.blindsub.physics.Heading;
+import com.kwhipke.blindsub.submarine.Damage;
+import com.kwhipke.blindsub.submarine.Torpedo;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.submarine.stats.TurningRadius;
 
@@ -29,6 +31,7 @@ public class SubmarineType {
 	public Speed getTopSpeed() {
 		return bodyType.getTopSpeed();
 	}
+	
 
 	/**
 	 * 
@@ -40,5 +43,14 @@ public class SubmarineType {
 
 	public TurningRadius getTurningRadius() {
 		return bodyType.getTurningRadius();
+	}
+
+	/**
+	 * 
+	 * @param torpedo
+	 * @return the amount of damage that would be done if this sub was hit with the torpedo
+	 */
+	public Damage getDamageDone(Torpedo torpedo) {
+		return bodyType.reduceDamage(torpedo);
 	}
 }

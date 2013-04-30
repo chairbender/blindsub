@@ -52,4 +52,18 @@ public class SoundEngine {
 		
 		
 	}
+
+	
+	/**
+	 * Causes a ping to echo from the source and be echoed back to the source from any other physobjects in the engine.
+	 * Not sure how I want this to work, but for now the response pings will be delayed based on how far the object is away. It might be
+	 * better to just change its pitch. But the listener needs some idea of how far an object is, not just the angle of it relative to their heading. 
+	 * @param torpedoPing
+	 * @param controlledSubmarine
+	 */
+	public void doPing(Sound torpedoPing,
+			PhysObj source) {
+		// TODO: implement the pinging behavior
+		
+	}
 }

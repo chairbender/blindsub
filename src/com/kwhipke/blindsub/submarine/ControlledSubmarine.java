@@ -61,10 +61,12 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 	}
 
 	@Override
-	public void onButtonPressed(SubmarineButton whichButton) {
+	public void onButtonPressed(SubmarineButton whichButton) throws IOException {
 		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
 			soundEngine.playSound(SubmarineSounds.TORPEDO_FIRING, this);
 			this.fire();
+		} else if (whichButton.getButtonType().equals(SubmarineButtonType.PING)) {
+			soundEngine.doPing(SubmarineSounds.TORPEDO_PING, this);
 		}
 	}
 
@@ -82,22 +84,12 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 
 	@Override
 	public void onThrottleChanged(ThrottlePosition newThrottle) {
-		submarineStatus.changeThrottle(newThrottle);
+		currentState.changeThrottle(newThrottle);
 	}
 
 	@Override
 	public VelocityVector getVelocityVector() {
-		return new VelocityVector(submarineType.getTopSpeed().throttledBy(submarineStatus.getThrottle()),submarineState.getHeading());
+		return new VelocityVector(submarineType.getTopSpeed().throttledBy(currentState.getCurrentThrottle()),currentState.getCurrentHeading());
 	}
 
-	@Override
-	public boolean doCollision(PhysObj other) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public CollisionBounds getCollisionBounds() {
-		return submarineType.getCollisionBounds();
-	}	
 }

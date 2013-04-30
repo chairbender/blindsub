@@ -9,4 +9,5 @@ import com.kwhipke.blindsub.sound.Sound;
  */
 public class SubmarineSounds {
 	public static final Sound TORPEDO_FIRING = new Sound("torpedofire");
+	public static final Sound TORPEDO_PING = new Sound("ping");
 }

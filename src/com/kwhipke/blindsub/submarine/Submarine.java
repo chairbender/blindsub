@@ -8,6 +8,7 @@ import org.pielot.openal.Source;
 import android.app.Activity;
 
 import com.kwhipke.blindsub.*;
+import com.kwhipke.blindsub.physics.CollisionBounds;
 import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.sound.SoundPhysicalObject;
@@ -35,5 +36,22 @@ public abstract class Submarine extends SoundPhysicalObject {
 		this.currentState = initialState;
 		this.submarineType = submarineType;
 	}
+	
+	@Override
+	public boolean doCollision(PhysObj other) {
+		//When it collides with a missile, it should reduce hull integrity
+		if (other instanceof Torpedo) {
+			//Take damage, calculated based on the type of submarine this is and the
+			//torpedo
+			currentState.takeDamage(submarineType,(Torpedo)other);
+		}
+		
+		return currentState.isDestroyed();
+	}
+	
+	@Override
+	public CollisionBounds getCollisionBounds() {
+		return submarineType.getCollisionBounds();
+	}	
 
 }

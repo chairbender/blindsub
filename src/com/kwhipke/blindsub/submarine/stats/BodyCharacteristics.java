@@ -37,5 +37,9 @@ public class BodyCharacteristics {
 	public TurningRadius getTurningRadius() {
 		return minTurningRadius;
 	}
+
+	public DamageResistance getDamageResistance() {
+		return damageResistance;
+	}
 	
 }

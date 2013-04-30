@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.submarine.state;
 
+import com.kwhipke.blindsub.submarine.Damage;
 import com.kwhipke.blindsub.submarine.control.Steering;
 import com.kwhipke.blindsub.submarine.control.ThrottlePosition;
 
@@ -34,5 +35,13 @@ public class SubmarineStatus {
 
 	public Steering currentSteering() {
 		return steering;
+	}
+	
+	public void doDamage(Damage toDo) {
+		integrity.takeDamage(toDo);
+	}
+
+	public boolean isDestroyed() {
+		return integrity.isZero();
 	}
 }

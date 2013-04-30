@@ -1,7 +1,9 @@
 package com.kwhipke.blindsub.submarine.state;
 
 import com.kwhipke.blindsub.physics.Heading;
+import com.kwhipke.blindsub.submarine.Torpedo;
 import com.kwhipke.blindsub.submarine.control.Steering;
+import com.kwhipke.blindsub.submarine.control.ThrottlePosition;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.submarine.stats.TurningRadius;
 import com.kwhipke.blindsub.submarine.type.SubmarineType;
@@ -49,5 +51,39 @@ public class SubmarineState {
 	
 	public Heading getCurrentHeading() {
 		return currentSpatialState.getHeading();
+	}
+	
+	public ThrottlePosition getCurrentThrottle() {
+		return currentStatus.getThrottle();
+	}
+
+
+	/**
+	 * 
+	 * @param newThrottle new throttle to change to, instantly
+	 */
+	public void changeThrottle(ThrottlePosition newThrottle) {
+		currentStatus.changeThrottle(newThrottle);
+		
+	}
+
+
+	/**
+	 * Reduces the hull integrity based on the submarineType and the torpedo
+	 * @param submarineType type of the submarine damage is being done to
+	 * @param other the missile that is hitting the submarine
+	 */
+	public void takeDamage(SubmarineType submarineType, Torpedo torpedo) {
+		currentStatus.doDamage(submarineType.getDamageDone(torpedo));
+		
+	}
+
+
+	/**
+	 * 
+	 * @return true if integrity reduced to zero or below
+	 */
+	public boolean isDestroyed() {
+		return currentStatus.isDestroyed();
 	}
 }
