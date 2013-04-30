@@ -9,8 +9,10 @@ import com.kwhipke.blindsub.physics.Position;
 import android.app.Activity;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 /**
  * Manages audio.
  * @author Kyle
@@ -19,7 +21,8 @@ import java.util.HashMap;
 public class SoundEngine {
 	private PhysicsEngine physicsEngine;
 	private PhysObj listener;
-	private Map<PhysObj,SoundSet> objectSounds;
+	private Map<PhysObj,SoundSource> objectSounds;
+	private Set<PlaySoundDelayed> delayedSounds;
 	
 	/**
 	 * 
@@ -29,28 +32,49 @@ public class SoundEngine {
 	public SoundEngine(PhysicsEngine physicsEngine,PhysObj listener) {
 		this.physicsEngine = physicsEngine;
 		this.listener = listener;
-		this.objectSounds = new HashMap<PhysObj,SoundSet>();
+		this.objectSounds = new HashMap<PhysObj,SoundSource>();
+	}
+	
+	/**
+	 * Allows the sound engine to update positions of everything and trigger and delayed sounds
+	 * @throws IOException 
+	 */
+	//TODO: Fire off this tick somewhere. It should probably happen in the same thread as the physics engine to keep things simple. So probably
+	// make the sound engine subscribe to the tick method of the physics engine.
+	public void tick() throws IOException {
+		//Update listener position
+		Position sourcePosition = physicsEngine.getPositionOfPhysObj(listener);
+		SoundEnv.getInstance().setListenerPos(sourcePosition.x, sourcePosition.y, 0);
+		
+		//Update positions of soundsets based on the physicalobjects they represent
+		for (PhysObj physicalObject : objectSounds.keySet()) {
+			SoundSource soundSource = objectSounds.get(physicalObject);
+			soundSource.updatePosition(physicsEngine.getPositionOfPhysObj(physicalObject));
+		}
+		
+		//Play delayed sounds if it's time
+		Set<PlaySoundDelayed> toRemove = new HashSet<PlaySoundDelayed>();
+		for (PlaySoundDelayed delayedSound : delayedSounds) {
+			if (delayedSound.playIfReady(this)) {
+				toRemove.add(delayedSound);
+			}
+		}
+		for (PlaySoundDelayed soundToRemove : toRemove) {
+			delayedSounds.remove(soundToRemove);
+		}
+		
 	}
 	
 	//TODO: Change what is passed in so user can pass in subclasses of sound to play things like engine start, run, then stop, and looped sounds
 	public void playSound(Sound toPlay,PhysObj source) throws IOException {
-		//get the position to play the sound at from the physics engine, based on the
-		//listener's position
-		//TODO: Finish implementing this
-		if (source == listener) {
-			//TODO: play the indoor sound
-		}//TODO: else
+
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(source);
-		SoundSet currentSounds = objectSounds.get(source);
-		
+		SoundSource currentSounds = objectSounds.get(source);
 		if (currentSounds == null) {
-			currentSounds = new SoundSet(sourcePosition);
+			currentSounds = new SoundSource(sourcePosition,source == listener);
 			objectSounds.put(source, currentSounds);
-		} 
-		//TODO: should probably invert this so you call play on sounds and pass in the sound engine
+		}
 		currentSounds.play(toPlay);
-		
-		
 	}
 
 	
@@ -63,7 +87,7 @@ public class SoundEngine {
 	 */
 	public void doPing(Sound torpedoPing,
 			PhysObj source) {
-		// TODO: implement the pinging behavior
+		//TODO: Implement
 		
 	}
 }

@@ -62,7 +62,7 @@ public class GameEngine {
 		this.env = SoundEnv.getInstance(parentActivity);
 		Buffer ping = null;
 		try {
-			ping = SoundEngine.getSoundManager(parentActivity).getSound("pingresponse");
+			ping = SoundEngine.getSoundManager(parentActivity).getSoundInternalVersion("pingresponse");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
