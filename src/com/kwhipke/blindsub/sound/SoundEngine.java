@@ -2,6 +2,7 @@ package com.kwhipke.blindsub.sound;
 
 import org.pielot.openal.*;
 
+import com.kwhipke.blindsub.engine.Ticker;
 import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.physics.Position;
@@ -18,7 +19,7 @@ import java.util.Set;
  * @author Kyle
  *
  */
-public class SoundEngine {
+public class SoundEngine implements Ticker {
 	private PhysicsEngine physicsEngine;
 	private PhysObj listener;
 	private Map<PhysObj,SoundSource> objectSounds;
@@ -33,6 +34,7 @@ public class SoundEngine {
 		this.physicsEngine = physicsEngine;
 		this.listener = listener;
 		this.objectSounds = new HashMap<PhysObj,SoundSource>();
+		physicsEngine.setPostTickEvent(this);
 	}
 	
 	/**

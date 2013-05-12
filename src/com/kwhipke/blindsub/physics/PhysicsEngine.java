@@ -1,9 +1,12 @@
 package com.kwhipke.blindsub.physics;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.kwhipke.blindsub.engine.Ticker;
 
 
 /**
@@ -25,6 +28,7 @@ public class PhysicsEngine {
 	private boolean isPaused = false;
 	private final long millisecondsPerTick;
 	Map<PhysObj,TrackedPhysicalObject> trackedObjects;
+	private Ticker doAfterTick;
 
 	/**
 	 * 
@@ -46,8 +50,9 @@ public class PhysicsEngine {
 	/**
 	 * Advance the simulation one tick - all objects will be moved at their current velocities for millisecondsPerTick milliseconds. After that move is done, 
 	 * the system will check for collisions. So, a low tick rate might potentially let objects pass through each other
+	 * @throws IOException 
 	 */
-	private void tick() {
+	private void tick() throws IOException {
 		/*
 		 * For each object, get its speed and direction. Then calculate its new position after millisPerTick milliseconds.
 		 * Set the new position of it. Chek for collissions. If it collides with another object, move it back to where it was and run the collision handler.
@@ -62,6 +67,10 @@ public class PhysicsEngine {
 				obj.setPosition(oldPosition);
 				triggerCollisions(obj,collisions);
 			}
+		}
+		if (doAfterTick != null) {
+			doAfterTick.tick();
+			
 		}
 	}
 	
@@ -142,5 +151,14 @@ public class PhysicsEngine {
 	
 	private synchronized boolean isPaused() {
 		return isPaused;
+	}
+
+	/**
+	 * 
+	 * @param toTick what should be ticked after the physics engine's tick is complete.
+	 */
+	public void setPostTickEvent(Ticker toTick) {
+		this.doAfterTick = toTick;
+		
 	}
 }
