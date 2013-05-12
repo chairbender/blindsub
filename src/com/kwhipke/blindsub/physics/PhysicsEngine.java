@@ -24,13 +24,14 @@ import com.kwhipke.blindsub.engine.Ticker;
  * @author Kyle
  *
  */
-public class PhysicsEngine {	
-	private boolean isPaused = false;
+public class PhysicsEngine {
+    private static final double SOUND_METERS_PER_SECOND = 50;
+    private boolean isPaused = false;
 	private final long millisecondsPerTick;
 	Map<PhysObj,TrackedPhysicalObject> trackedObjects;
 	private Ticker doAfterTick;
 
-	/**
+    /**
 	 * 
 	 * @param millisecondsPerTick - how many real milliseconds should elapse per tick.
 	 */
@@ -120,11 +121,10 @@ public class PhysicsEngine {
 			@Override
 			public void run() {
 				while (!isPaused()) {
-					tick();
-					try {
+                    try {
+                        tick();
 						Thread.sleep(millisecondsPerTick);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
@@ -161,4 +161,31 @@ public class PhysicsEngine {
 		this.doAfterTick = toTick;
 		
 	}
+
+    /**
+     *
+     * @return the ojects that would echo back a ping from the sourceObject
+     */
+    public Set<PhysObj> getEchoObjects(PhysObj sourceObj) {
+        Set<PhysObj> result = new HashSet<PhysObj>();
+        for (PhysObj physObj : this.trackedObjects.keySet()) {
+            if (physObj != sourceObj) {
+                result.add(physObj);
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param source
+     * @param echoObject
+     * @return time in ms for sound to travel from source to echoObject, assuming no obstructions
+     */
+    public long getTravelTime(PhysObj source, PhysObj echoObject) {
+        TrackedPhysicalObject sourceTrackedObj = trackedObjects.get(source);
+        TrackedPhysicalObject echoTrackedObject = trackedObjects.get(echoObject);
+        return Math.round(sourceTrackedObj.getPosition().distanceTo(echoTrackedObject.getPosition()).getMeters() / SOUND_METERS_PER_SECOND * 1000);
+
+    }
 }

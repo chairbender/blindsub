@@ -63,7 +63,7 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 	@Override
 	public void onButtonPressed(SubmarineButton whichButton) throws IOException {
 		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
-			soundEngine.playSound(SubmarineSounds.TORPEDO_FIRING, this);
+			soundEngine.playSound(SubmarineSounds.TORPEDO_FIRING, this,false);
 			this.fire();
 		} else if (whichButton.getButtonType().equals(SubmarineButtonType.PING)) {
 			soundEngine.doPing(SubmarineSounds.TORPEDO_PING, this);
@@ -83,7 +83,8 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 	}
 
 	@Override
-	public void onThrottleChanged(ThrottlePosition newThrottle) {
+	public void onThrottleChanged(ThrottlePosition newThrottle) throws IOException {
+        soundEngine.playSound(SubmarineSounds.ENGINE_RUNNING,this,true);
 		currentState.changeThrottle(newThrottle);
 	}
 

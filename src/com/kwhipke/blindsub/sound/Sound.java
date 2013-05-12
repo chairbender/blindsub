@@ -22,6 +22,7 @@ public class Sound {
 	public Sound(String soundName) {
 		this.soundName = soundName;
 	}
+
 	/**
 	 * 
 	 * @param whether to get the internal or external version of the sound

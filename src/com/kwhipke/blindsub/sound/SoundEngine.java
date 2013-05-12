@@ -41,8 +41,6 @@ public class SoundEngine implements Ticker {
 	 * Allows the sound engine to update positions of everything and trigger and delayed sounds
 	 * @throws IOException 
 	 */
-	//TODO: Fire off this tick somewhere. It should probably happen in the same thread as the physics engine to keep things simple. So probably
-	// make the sound engine subscribe to the tick method of the physics engine.
 	public void tick() throws IOException {
 		//Update listener position
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(listener);
@@ -66,30 +64,45 @@ public class SoundEngine implements Ticker {
 		}
 		
 	}
-	
-	//TODO: Change what is passed in so user can pass in subclasses of sound to play things like engine start, run, then stop, and looped sounds
-	public void playSound(Sound toPlay,PhysObj source) throws IOException {
 
+	public void playSound(Sound toPlay,PhysObj source, boolean loop) throws IOException {
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(source);
 		SoundSource currentSounds = objectSounds.get(source);
 		if (currentSounds == null) {
 			currentSounds = new SoundSource(sourcePosition,source == listener);
 			objectSounds.put(source, currentSounds);
 		}
-		currentSounds.play(toPlay);
+		currentSounds.play(toPlay,loop);
 	}
+
+    /**
+     * Make a sound play in a certain amount of time
+     * @param toPlay sound to play
+     */
+    private void playSoundDelayed(PlaySoundDelayed toPlay) {
+        delayedSounds.add(toPlay);
+    }
 
 	
 	/**
 	 * Causes a ping to echo from the source and be echoed back to the source from any other physobjects in the engine.
 	 * Not sure how I want this to work, but for now the response pings will be delayed based on how far the object is away. It might be
 	 * better to just change its pitch. But the listener needs some idea of how far an object is, not just the angle of it relative to their heading. 
-	 * @param torpedoPing
-	 * @param controlledSubmarine
+	 * @param toPlay sound to use as the ping sound
+     * @param source what is emitting the sound
 	 */
-	public void doPing(Sound torpedoPing,
-			PhysObj source) {
-		//TODO: Implement
+	public void doPing(Sound toPlay,
+			PhysObj source) throws IOException {
+        //If it's the listener doing the ping, play the internal sound immediately, then play the external sound delayed based on the positions of all other physical objects
+        if (source == this.listener) {
+            playSound(toPlay,source,false);
+            for (PhysObj echoObject : physicsEngine.getEchoObjects(source)) {
+                playSoundDelayed(new PlaySoundDelayed(source,toPlay,physicsEngine.getTravelTime(source,echoObject)));
+            }
+        } else {
+            //Play the sound only hearing it from the other, delayed
+            playSoundDelayed(new PlaySoundDelayed(source,toPlay,physicsEngine.getTravelTime(source,listener)));
+        }
 		
 	}
 }

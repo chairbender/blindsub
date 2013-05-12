@@ -34,16 +34,22 @@ public class SoundSource {
 	/**
 	 * 
 	 * @param toPlay play the sound, which will follow the position of the soundset
+     * @param loop whether to loop it. You can stop it with the stop method
 	 * @throws IOException if error reading the sound from the file if it needs to create a new buffer
 	 */
-	public void play(Sound toPlay) throws IOException {
+	public void play(Sound toPlay, boolean loop) throws IOException {
 		Source soundSource = sounds.get(toPlay);
 		if (soundSource == null) {
 			soundSource = SoundEnv.getInstance().addSource(toPlay.getBuffer(isListener));
 			sounds.put(toPlay, soundSource);
 		}
-		soundSource.play(false);
+		soundSource.play(loop);
 	}
+
+    public void stop(Sound toStop) {
+        Source sourceToStop = sounds.get(toStop);
+        sourceToStop.stop();
+    }
 	
 	/**
 	 * 

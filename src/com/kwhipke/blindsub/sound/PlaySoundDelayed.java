@@ -36,7 +36,7 @@ public class PlaySoundDelayed {
 	 */
 	public boolean playIfReady(SoundEngine soundEngine) throws IOException {
 		if (System.currentTimeMillis() >= destinationTime) {
-			soundEngine.playSound(toPlay, source);
+			soundEngine.playSound(toPlay, source,false);
 			return true;
 		}
 		return false;

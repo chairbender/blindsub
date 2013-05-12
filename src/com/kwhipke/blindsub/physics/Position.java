@@ -1,5 +1,7 @@
 package com.kwhipke.blindsub.physics;
 
+import com.kwhipke.blindsub.units.Meters;
+
 /**
  * Encapsulates a position in 2d space
  * @author Kyle
@@ -21,4 +23,13 @@ public class Position {
 	public Position add(Position newPosition) {
 		return new Position(this.x + newPosition.x,this.y + newPosition.y);
 	}
+
+    /**
+     *
+     * @param otherPosition the position to get the distance to
+     * @return the distance between the two positions in meters
+     */
+    public Meters distanceTo(Position otherPosition) {
+        return new Meters(Math.sqrt( Math.abs(Math.pow(x - otherPosition.x,2)) + Math.abs(Math.pow(y - otherPosition.y,2))));
+    }
 }

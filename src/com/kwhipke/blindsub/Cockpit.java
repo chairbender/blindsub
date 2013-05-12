@@ -1,33 +1,7 @@
 package com.kwhipke.blindsub;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
-import java.util.ResourceBundle;
-
-import com.kwhipke.blindsub.R;
-import com.kwhipke.blindsub.submarine.ControlledSubmarine;
-import com.kwhipke.blindsub.submarine.listeners.FireTouchListener;
-import com.kwhipke.blindsub.submarine.listeners.PingTouchListener;
-import com.kwhipke.blindsub.submarine.listeners.ThrottleTouchListener;
-
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.SoundPool;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 
 /**
