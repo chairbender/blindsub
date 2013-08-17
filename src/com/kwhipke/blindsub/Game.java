@@ -12,6 +12,8 @@ import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineTypes;
 
+//TODO: CUrrent goal, get it to a state where it compiles, you can drive the player sub around, and you can ping the other sub
+
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles
  * getting button presses from the Android device. The game does not start until start is called.
@@ -33,11 +35,12 @@ public class Game {
 	public void start(Button btnPing, Button btnFire, Button btnThrottle) {
 		//Create a physics engine to handle the physical interactions
 		PhysicsEngine physEng = new PhysicsEngine(10);
-		//Sound engine
-		SoundEngine soundEng = new SoundEngine();
+        ControlledSubmarine playerSub;
+		//Sound engine to handle playing of audio events and interacting with the physics engine to handle the movement of sound
+		SoundEngine soundEng = new SoundEngine(physEng,playerSub);
 		
 		//Create a player-controlled submarine and add it to the game's physics simulation
-		ControlledSubmarine playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),soundEng,SubmarineTypes.BASIC);
+		 playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),SubmarineTypes.BASIC);
 		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body and engine.
 		AndroidController androidController = new AndroidController(new SteeringSensorReader(),btnThrottle,btnPing,btnFire,playerSub,playerSub,playerSub);
 		physEng.addObject(playerSub);

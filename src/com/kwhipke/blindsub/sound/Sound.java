@@ -25,7 +25,7 @@ public class Sound {
 
 	/**
 	 * 
-	 * @param whether to get the internal or external version of the sound
+	 * @param internal whether to get the internal or external version of the sound
 	 * @return uses the singleton buffermanager to get the Buffer (i,e. the audio data for the sound)
 	 * based on the soundName.
 	 * @throws IOException if error loading the buffer from the sound's file

@@ -18,4 +18,12 @@ public class ThrottlePosition {
 	public double getThrottleFactor() {
 		return throttle;
 	}
+
+    /**
+     *
+     * @return true if the throttle is at zero
+     */
+    public boolean isZero() {
+        return throttle == 0;
+    }
 }

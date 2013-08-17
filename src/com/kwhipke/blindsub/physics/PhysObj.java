@@ -3,8 +3,9 @@ package com.kwhipke.blindsub.physics;
 import java.util.Set;
 
 /**
- * Interface every physics object must implement. Also lets objects update their state
- * the basic measurement of physics time is ticks.
+ * Interface every physics object must implement. Physics works like this - objects can change their velocity vector and collision bounds
+ * whenever they want - it's not really a robust physics engine since it doesn't treat everything in terms of forces acting on objects, but it doesn't need to.
+ * When objects collide, it'll prevent them from moving through each other unless one is transparent.
  * @author Kyle
  *
  */
@@ -12,7 +13,9 @@ public interface PhysObj {
 	
 	/**
 	 * 
-	 * @return the current velocity and heading of the object.
+	 * @return the current desired velocity and heading of the object.
+     * The physics engine will let things just change this however they want. If an object collides with another object, though
+     * it will not allow them to pass through each other unless one of them is transparent
 	 */
 	public VelocityVector getVelocityVector();
 	
@@ -30,12 +33,14 @@ public interface PhysObj {
 	 * @return the collision bounds of the object
 	 */
 	public CollisionBounds getCollisionBounds();
-	
-	/**
-	 * ALlows a physics object to update its own state in response to time passing. So, for example, if 100 milliseconds elapse, and the object is a sub that is turning,
-	 * the object can update its heading based on its turning radius and how far the steering wheel is turned knowing 100 ms have elapsed.
-	 * param elapsedMilliseconds amount of milliseconds object should track as having elapsed during this state update.
-	 */
-	public void tick(long elapsedMilliseconds);
-	
+
+
+    /**
+     * lets a sub know that it should update its state for elapsedMilliseconds milliseconds. In other words,
+     * if it passes 100ms, after this method exits, the submarine's state should represent what it will be like in 100ms from
+     * when the method entered.
+     * @param elapsedMilliseconds amount of milliseconds to elapse
+     * @param physicsEngineController the controller allowing the object to interact with the physics engine
+     */
+    public void tick(long elapsedMilliseconds, PhysicsEngineController physicsEngineController);
 }

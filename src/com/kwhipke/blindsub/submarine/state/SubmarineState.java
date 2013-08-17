@@ -29,7 +29,7 @@ public class SubmarineState {
 	/**
 	 * Update the heading based on the current steering and speed. Use the subType to determine the stats to use to figure out
 	 * how quickly it turns or moves.
-	 * @param submarineType description of the submarine
+	 * @param subType description of the submarine
 	 * @param elapsedMilliseconds amount of time to hold that steering and simulate for
 	 */
 	public void tick(SubmarineType subType, long elapsedMilliseconds) {

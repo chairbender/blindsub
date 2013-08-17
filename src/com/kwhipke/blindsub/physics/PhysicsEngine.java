@@ -19,7 +19,7 @@ import com.kwhipke.blindsub.engine.Ticker;
  * still be moved. However, object collision is only checked at the END of an object's movement during a tick. And, if the object's state
  * changes after the beginning of it's movement during a tick, the state will not be picked up until the next tick. So, a quicker tick rate
  * means more responsiveness but more resource intensiveness.
- * 
+ *
  * Basically, imagine each tick as a "draw" for the physics engine.
  * @author Kyle
  *
@@ -47,16 +47,16 @@ public class PhysicsEngine {
 	public void addObject(PhysObj toAdd, Position startingPosition) {
 		trackedObjects.put(toAdd,new TrackedPhysicalObject(toAdd,startingPosition));
 	}
-	
+
 	/**
-	 * Advance the simulation one tick - all objects will be moved at their current velocities for millisecondsPerTick milliseconds. After that move is done, 
-	 * the system will check for collisions. So, a low tick rate might potentially let objects pass through each other
+	 * Advance the simulation one tick - all objects will be moved at their current velocities for millisecondsPerTick milliseconds. After that move is done,
+	 * the system will check for collisions. So, a long tick interval might potentially let objects pass through each other
 	 * @throws IOException 
 	 */
 	private void tick() throws IOException {
 		/*
 		 * For each object, get its speed and direction. Then calculate its new position after millisPerTick milliseconds.
-		 * Set the new position of it. Chek for collissions. If it collides with another object, move it back to where it was and run the collision handler.
+		 * Set the new position of it. Check for collissions. If it collides with another object, move it back to where it was and run the collision handler.
 		 */
 		for (TrackedPhysicalObject obj : trackedObjects.values()) {
 			VelocityVector velocityVector = obj.getVelocityVector();
