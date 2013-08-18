@@ -12,5 +12,5 @@ import java.io.IOException;
  */
 public interface OnThrottleChanged {
 
-	public void onThrottleChanged(ThrottlePosition newThrottle) throws IOException;
+	public void onThrottleChanged(ThrottlePosition newThrottle);
 }

@@ -52,6 +52,8 @@ public class SteeringSensorReader {
         Sensor geoSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		sensorManager.registerListener(gravityListener, gravitySensor,SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(geoListener, geoSensor,SensorManager.SENSOR_DELAY_GAME);
+
+        steeringSensorVectors = new SteeringSensorVectors();
 	}
 	
 	/**

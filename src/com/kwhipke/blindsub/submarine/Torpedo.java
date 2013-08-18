@@ -1,9 +1,6 @@
 package com.kwhipke.blindsub.submarine;
 
-import com.kwhipke.blindsub.physics.CollisionBounds;
-import com.kwhipke.blindsub.physics.Heading;
-import com.kwhipke.blindsub.physics.PhysObj;
-import com.kwhipke.blindsub.physics.VelocityVector;
+import com.kwhipke.blindsub.physics.*;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.units.Meters;
 import com.kwhipke.blindsub.util.PhysicsUtil;
@@ -59,7 +56,7 @@ public class Torpedo implements PhysObj, DamagingObject{
 	}
 
 	@Override
-	public void tick(long elapsedMilliseconds) {
+	public void tick(long elapsedMilliseconds, PhysicsEngineController controller) {
 		// do nothing
 		
 	}

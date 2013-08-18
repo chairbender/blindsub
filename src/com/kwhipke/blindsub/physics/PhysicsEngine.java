@@ -50,7 +50,8 @@ public class PhysicsEngine {
 
 	/**
 	 * Advance the simulation one tick - all objects will be moved at their current velocities for millisecondsPerTick milliseconds. After that move is done,
-	 * the system will check for collisions. So, a long tick interval might potentially let objects pass through each other
+	 * the system will check for collisions. Then, finally, the objects will be ticked (their tick method will be called)
+     * So, a long tick interval might potentially let objects pass through each other
 	 * @throws IOException 
 	 */
 	private void tick() throws IOException {
@@ -69,6 +70,10 @@ public class PhysicsEngine {
 				triggerCollisions(obj,collisions);
 			}
 		}
+        //Call all the tick methods
+        for (TrackedPhysicalObject obj : trackedObjects.values()) {
+            obj.getPhysObj().tick(millisecondsPerTick,new PhysicsEngineController(this,obj.getPhysObj()));
+        }
 		if (doAfterTick != null) {
 			doAfterTick.tick();
 			

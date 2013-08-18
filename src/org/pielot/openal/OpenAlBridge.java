@@ -104,10 +104,14 @@ public class OpenAlBridge {
 	private static void retrieveFromAssets(String filename)
 			throws IOException {
 
+
 		InputStream is = ContextUtil.getAppContext().getAssets().open(filename);
+
 
 		// Destination
 		File outFile = new File(ContextUtil.getAppContext().getFilesDir(), filename);
+        outFile.getParentFile().mkdirs();
+        outFile.createNewFile();
 
 		Log.i(TAG, "retrieveFromAssets( .. ) copying "
 				+ filename

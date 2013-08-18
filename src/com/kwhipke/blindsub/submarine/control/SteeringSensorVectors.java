@@ -20,6 +20,10 @@ public class SteeringSensorVectors {
 		this.lastGravityVector = gravityVector;
 	}
 
+    public SteeringSensorVectors() {
+
+    }
+
 	public void updateGravity(float[] newGravity) {
 		this.lastGravityVector = newGravity;		
 	}

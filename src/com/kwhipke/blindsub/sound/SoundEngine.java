@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.sound;
 
+import com.kwhipke.blindsub.submarine.SoundPhysObj;
 import org.pielot.openal.*;
 
 import com.kwhipke.blindsub.engine.Ticker;
@@ -19,7 +20,7 @@ import java.util.Set;
  * @author Kyle
  *
  */
-public class SoundEngine implements Ticker {
+public class SoundEngine implements Ticker, SoundEngineController {
 	private PhysicsEngine physicsEngine;
 	private PhysObj listener;
 	private Map<PhysObj,SoundSource> objectSounds;
@@ -28,14 +29,20 @@ public class SoundEngine implements Ticker {
 	/**
 	 * 
 	 * @param physicsEngine the physics engine that will let the sound engine know how the sounds will be heard
-	 * @param listener the physobj who represents the listener
 	 */
-	public SoundEngine(PhysicsEngine physicsEngine,PhysObj listener) {
+	public SoundEngine(PhysicsEngine physicsEngine) {
 		this.physicsEngine = physicsEngine;
-		this.listener = listener;
 		this.objectSounds = new HashMap<PhysObj,SoundSource>();
 		physicsEngine.setPostTickEvent(this);
 	}
+
+    /**
+     *
+     * @param listener the physobj that represents the listener's position and orientation
+     */
+    public void setListener(PhysObj listener) {
+        this.listener = listener;
+    }
 	
 	/**
 	 * Allows the sound engine to update positions of everything and trigger and delayed sounds
@@ -105,4 +112,10 @@ public class SoundEngine implements Ticker {
         }
 		
 	}
+
+    @Override
+    public void stopSound(Sound toStop, PhysObj physObj) {
+        SoundSource toStopSource = objectSounds.get(physObj);
+        toStopSource.stop(toStop);
+    }
 }

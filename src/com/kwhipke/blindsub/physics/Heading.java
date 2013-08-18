@@ -1,6 +1,8 @@
 package com.kwhipke.blindsub.physics;
 
+import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.units.Degrees;
+import com.kwhipke.blindsub.units.Meters;
 
 /**
  * Encapsulates a heading. 0 is east 90 is north
@@ -34,5 +36,33 @@ public class Heading {
 	public void adjustBy(Degrees headingChange) {
 		heading.add(headingChange);
 	}
-	
+
+    /**
+     *
+     * @param currentSpeedInThisHeading the velocity to get the x component of, assuming velocity is in this heading's direction
+     * @return the x component of the velocity in this direction
+     */
+    public Speed getXComponent(Speed currentSpeedInThisHeading) {
+        if (heading.getDegrees() >= 0 && heading.getDegrees() < 90) {
+            return new Speed(new Meters(Math.sin(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else if (heading.getDegrees() >= 90 && heading.getDegrees() < 180) {
+            return new Speed(new Meters(-1 * Math.sin(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else if (heading.getDegrees() >= 180 && heading.getDegrees() < 270) {
+            return new Speed(new Meters(Math.sin(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else {
+            return new Speed(new Meters(-1 * Math.sin(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        }
+    }
+
+    public Speed getYComponent(Speed currentSpeedInThisHeading) {
+        if (heading.getDegrees() >= 0 && heading.getDegrees() < 90) {
+            return new Speed(new Meters(Math.cos(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else if (heading.getDegrees() >= 90 && heading.getDegrees() < 180) {
+            return new Speed(new Meters(-1 * Math.cos(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else if (heading.getDegrees() >= 180 && heading.getDegrees() < 270) {
+            return new Speed(new Meters(Math.cos(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        } else {
+            return new Speed(new Meters(-1 * Math.cos(getRadians()) * currentSpeedInThisHeading.getVelocity()));
+        }
+    }
 }

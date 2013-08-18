@@ -30,26 +30,11 @@ public class VelocityVector {
 	}
 
 	private Speed getXComponent() {
-		if (heading.getDegrees() >= 0 && heading.getDegrees() < 90) {
-			return new Speed(new Meters(Math.sin(heading.getRadians()) * speed.getVelocity()));
-		} else if (heading.getDegrees() >= 90 && heading.getDegrees() < 180) {
-			return new Speed(new Meters(-1 * Math.sin(heading.getRadians()) * speed.getVelocity()));
-		} else if (heading.getDegrees() >= 180 && heading.getDegrees() < 270) {
-			return new Speed(new Meters(Math.sin(heading.getRadians()) * speed.getVelocity()));
-		} else {
-			return new Speed(new Meters(-1 * Math.sin(heading.getRadians()) * speed.getVelocity()));
-		}
+        return heading.getXComponent(speed);
+
 	}
 	
 	private Speed getYComponent() {
-		if (heading.getDegrees() >= 0 && heading.getDegrees() < 90) {
-			return new Speed(new Meters(Math.cos(heading.getRadians()) * speed.getVelocity()));
-		} else if (heading.getDegrees() >= 90 && heading.getDegrees() < 180) {
-			return new Speed(new Meters(-1 * Math.cos(heading.getRadians()) * speed.getVelocity()));
-		} else if (heading.getDegrees() >= 180 && heading.getDegrees() < 270) {
-			return new Speed(new Meters(Math.cos(heading.getRadians()) * speed.getVelocity()));
-		} else {
-			return new Speed(new Meters(-1 * Math.cos(heading.getRadians()) * speed.getVelocity()));
-		}
+        return heading.getYComponent(speed);
 	}
 }

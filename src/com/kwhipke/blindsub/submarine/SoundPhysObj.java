@@ -4,6 +4,8 @@ import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.Sound;
 import com.kwhipke.blindsub.sound.SoundEngineController;
 
+import java.io.IOException;
+
 /**
  * A physical object that makes sounds
  * User: Kyle
@@ -23,7 +25,7 @@ public abstract class SoundPhysObj implements PhysObj {
      * @param engineRunning sound to emit
      * @param b whether to loop the sound
      */
-    protected void emitSound(Sound engineRunning, boolean b) {
+    protected void emitSound(Sound engineRunning, boolean b) throws IOException {
         soundEngineController.playSound(engineRunning,this,b);
     }
 

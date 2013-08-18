@@ -3,6 +3,7 @@ package com.kwhipke.blindsub;
 import android.widget.Button;
 
 import com.kwhipke.blindsub.physics.PhysicsEngine;
+import com.kwhipke.blindsub.physics.Position;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
 import com.kwhipke.blindsub.submarine.control.AndroidController;
@@ -37,61 +38,22 @@ public class Game {
 		PhysicsEngine physEng = new PhysicsEngine(10);
         ControlledSubmarine playerSub;
 		//Sound engine to handle playing of audio events and interacting with the physics engine to handle the movement of sound
-		SoundEngine soundEng = new SoundEngine(physEng,playerSub);
+		SoundEngine soundEng = new SoundEngine(physEng);
 		
 		//Create a player-controlled submarine and add it to the game's physics simulation
-		 playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),SubmarineTypes.BASIC);
+		 playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),SubmarineTypes.BASIC,soundEng);
+
+        soundEng.setListener(playerSub);
 		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body and engine.
 		AndroidController androidController = new AndroidController(new SteeringSensorReader(),btnThrottle,btnPing,btnFire,playerSub,playerSub,playerSub);
-		physEng.addObject(playerSub);
+		physEng.addObject(playerSub, Position.ORIGIN);
 	}
 
-	/**
-	 * Tell the game that the sub should drive
-	 */
-	public void subDrive() {
+    public void pause() {
+        //TODO: implement
+    }
 
-		
-	}
-
-	/**
-	 * Tell the game that the sub should stop
-	 */
-	public void subStop() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
-	 * Tell the game that the sub should ping
-	 */
-	public void subPing() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
-	 * Tell the game that the sub should fire
-	 */
-	public void subFire() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
-	 * Tell the game to pause (if not paused)
-	 */
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/**
-	 * Tell the game to resume (if paused)
-	 */
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    public void resume() {
+        //TODO: implement
+    }
 }

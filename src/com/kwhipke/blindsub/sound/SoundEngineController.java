@@ -4,6 +4,8 @@ import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
 import com.kwhipke.blindsub.submarine.SoundPhysObj;
 
+import java.io.IOException;
+
 /**
  * Provides a control for objects to interact with the soundengine in a safe way.
  * User: Kyle
@@ -19,7 +21,7 @@ public interface SoundEngineController {
      * will still play. No need to return a handle because the physobj takes care of updating the sound position, and
      * the stopSound method will work since there is ever only one looping instance of a given sound.
      */
-    public void playSound(Sound toPlay, PhysObj source, boolean loop);
+    public void playSound(Sound toPlay, PhysObj source, boolean loop) throws IOException;
 
     /**
      * Causes a ping to echo from the source and be echoed back to the source from any other physobjects in the engine.
@@ -28,12 +30,12 @@ public interface SoundEngineController {
      * @param toPlay sound to use as the ping sound
      * @param source what is emitting the sound
      */
-    public void doPing(Sound toPlay, PhysObj source);
+    public void doPing(Sound toPlay, PhysObj source) throws IOException;
 
     /**
      * stops the physobject from emitting the sound if it is currently looping
      * @param toStop sound to stop
      * @param soundPhysObj physobj whose sound should be stopped
      */
-    void stopSound(Sound toStop, SoundPhysObj soundPhysObj);
+    void stopSound(Sound toStop, PhysObj soundPhysObj);
 }

@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.submarine;
 
+import android.util.Log;
 import com.kwhipke.blindsub.physics.PhysicsEngineController;
 import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.sound.SoundEngineController;
@@ -40,13 +41,17 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 	}
 
 	@Override
-	public void onButtonPressed(SubmarineButton whichButton) throws IOException {
-		if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
-			soundEngineController.playSound(SubmarineSounds.TORPEDO_FIRING, this,false);
-			this.fire();
-		} else if (whichButton.getButtonType().equals(SubmarineButtonType.PING)) {
-			soundEngineController.doPing(SubmarineSounds.TORPEDO_PING, this);
-		}
+	public void onButtonPressed(SubmarineButton whichButton) {
+        try{
+            if (whichButton.getButtonType().equals(SubmarineButtonType.FIRE)) {
+                soundEngineController.playSound(SubmarineSounds.TORPEDO_FIRING, this,false);
+                this.fire();
+            } else if (whichButton.getButtonType().equals(SubmarineButtonType.PING)) {
+                soundEngineController.doPing(SubmarineSounds.TORPEDO_PING, this);
+            }
+        } catch(Exception ex) {
+            Log.e("ControlledSubmarine",ex.getMessage());
+        }
 	}
 
 	@Override
@@ -62,13 +67,17 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 	}
 
 	@Override
-	public void onThrottleChanged(ThrottlePosition newThrottle) throws IOException {
-        if (!newThrottle.isZero()) {
-            emitSound(SubmarineSounds.ENGINE_RUNNING, true);
-        } else {
-            stopSound(SubmarineSounds.ENGINE_RUNNING);
+	public void onThrottleChanged(ThrottlePosition newThrottle) {
+        try {
+            if (!newThrottle.isZero()) {
+                emitSound(SubmarineSounds.ENGINE_RUNNING, true);
+            } else {
+                stopSound(SubmarineSounds.ENGINE_RUNNING);
+            }
+            currentState.changeThrottle(newThrottle);
+        } catch (Exception ex) {
+            Log.e("ControlledSubmarine",ex.getMessage());
         }
-		currentState.changeThrottle(newThrottle);
 	}
 
 
