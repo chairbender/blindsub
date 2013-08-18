@@ -91,11 +91,14 @@ public class OpenAlBridge {
 
 		String filename = name + ".wav";
 		File file = new File(ContextUtil.getAppContext().getFilesDir() , filename);
+        //NOTE: Turned off the check !file.exists to prevent confusion in future, so it always
+        // gets the newest version.
 
-		if (!file.exists()) {
+		if (true) {
 			Log.w(TAG, file + " not found, copying from assets");
 			retrieveFromAssets(filename);
 		} else {
+            Log.w(TAG, file + " found, using it");
 		}
 
 		return file.getAbsolutePath();
@@ -131,6 +134,7 @@ public class OpenAlBridge {
 		fos.flush();
 		fos.close();
 		is.close();
+
 
 	}
 

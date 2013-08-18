@@ -207,6 +207,7 @@ int setListenerOrientation(float xAt, float yAt, float zAt, float xUp, float yUp
 char* readWav(char* filename,BasicWAVEHeader* header){
   char* buffer = 0;
   //FILE* file = fopen("/sdcard/accessiblemap/lake.wav","rb");
+  LOG_WARN("Trying to open %s",filename);
   FILE* file = fopen(filename,"rb");
   if (!file) {
 	LOG_WARN("readWAVE() - fopen failed");
