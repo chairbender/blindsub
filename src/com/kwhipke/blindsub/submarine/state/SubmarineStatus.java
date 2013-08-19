@@ -30,7 +30,7 @@ public class SubmarineStatus {
 	}
 	
 	public void changeSteering(Steering newSteering) {
-		this.steering = steering;
+		this.steering = newSteering;
 	}
 
 	public Steering currentSteering() {

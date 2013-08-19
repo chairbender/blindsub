@@ -1,6 +1,6 @@
 package com.kwhipke.blindsub.physics;
 
-import java.util.Set;
+import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
 
 /**
  * Interface every physics object must implement. Physics works like this - objects can change their velocity vector and collision bounds
@@ -43,4 +43,12 @@ public interface PhysObj {
      * @param physicsEngineController the controller allowing the object to interact with the physics engine
      */
     public void tick(long elapsedMilliseconds, PhysicsEngineController physicsEngineController);
+
+    /**
+     * This is NOT for checking if the object physically touches the other, it is for determining
+     * whether it is supposed to cause a collision to occur (i.e. a sub should not collide with its own torpedos)
+     * @param other the other physobj to check if collisions should occur with
+     * @return true if this physobj is supposed to cause collisions with other. False if not.
+     */
+    boolean collidesWith(PhysObj other);
 }

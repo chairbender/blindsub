@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kwhipke.blindsub.units.Degrees;
 import com.kwhipke.blindsub.util.AudioUtil;
 
 import android.app.Activity;
@@ -124,10 +125,10 @@ public class SoundEnv {
 	 * around any of the three possible axis.
 	 * @param heading the direction the listener should face, in degrees ( 0 is east 90 is north)
 	 */
-	public void setListenerOrientation(double heading) {
-		heading = getOpenAlOrientation(heading);
-		double zv = -Math.cos(Math.toRadians(heading));
-		double xv = Math.sin(Math.toRadians(heading));
+	public void setListenerOrientation(Degrees heading) {
+		double degrees = getOpenAlOrientation(heading.getDegrees());
+		double zv = -Math.cos(Math.toRadians(degrees));
+		double xv = Math.sin(Math.toRadians(degrees));
 		this.setListenerOrientation((float) xv, 0, (float) zv);
 	}
 	

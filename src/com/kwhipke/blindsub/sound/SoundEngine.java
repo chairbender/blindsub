@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.sound;
 
+import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.submarine.SoundPhysObj;
 import org.pielot.openal.*;
 
@@ -33,6 +34,7 @@ public class SoundEngine implements Ticker, SoundEngineController {
 	public SoundEngine(PhysicsEngine physicsEngine) {
 		this.physicsEngine = physicsEngine;
 		this.objectSounds = new HashMap<PhysObj,SoundSource>();
+        this.delayedSounds = new HashSet<PlaySoundDelayed>();
 		physicsEngine.setPostTickEvent(this);
 	}
 
@@ -52,6 +54,8 @@ public class SoundEngine implements Ticker, SoundEngineController {
 		//Update listener position
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(listener);
 		SoundEnv.getInstance().setListenerPos(sourcePosition.x, sourcePosition.y, 0);
+        VelocityVector vec = listener.getVelocityVector();
+        SoundEnv.getInstance().setListenerOrientation(listener.getVelocityVector().heading());
 		
 		//Update positions of soundsets based on the physicalobjects they represent
 		for (PhysObj physicalObject : objectSounds.keySet()) {
@@ -104,7 +108,7 @@ public class SoundEngine implements Ticker, SoundEngineController {
         if (source == this.listener) {
             playSound(toPlay,source,false);
             for (PhysObj echoObject : physicsEngine.getEchoObjects(source)) {
-                playSoundDelayed(new PlaySoundDelayed(source,toPlay,physicsEngine.getTravelTime(source,echoObject)));
+                playSoundDelayed(new PlaySoundDelayed(echoObject,toPlay,physicsEngine.getTravelTime(source,echoObject)));
             }
         } else {
             //Play the sound only hearing it from the other, delayed

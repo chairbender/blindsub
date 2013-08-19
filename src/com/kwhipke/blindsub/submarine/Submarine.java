@@ -1,6 +1,6 @@
 package com.kwhipke.blindsub.submarine;
 
-import com.kwhipke.blindsub.physics.CollisionBounds;
+import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
 import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngineController;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;

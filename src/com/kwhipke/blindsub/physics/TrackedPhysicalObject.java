@@ -1,5 +1,7 @@
 package com.kwhipke.blindsub.physics;
 
+import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
+
 /**
  * Stores the physical state of a physobj.
  * @author Kyle
@@ -63,5 +65,8 @@ public class TrackedPhysicalObject {
 	public PhysObj getPhysObj() {
 		return trackedObject;
 	}
-	
+
+    public boolean collidesWith(TrackedPhysicalObject other) {
+        return trackedObject.collidesWith(other.trackedObject);
+    }
 }

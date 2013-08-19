@@ -1,6 +1,7 @@
 package com.kwhipke.blindsub.physics;
 
 import com.kwhipke.blindsub.submarine.stats.Speed;
+import com.kwhipke.blindsub.units.Degrees;
 import com.kwhipke.blindsub.units.Meters;
 
 /**
@@ -37,4 +38,12 @@ public class VelocityVector {
 	private Speed getYComponent() {
         return heading.getYComponent(speed);
 	}
+
+    /**
+     *
+     * @return the heading of the velocity vector (i.e. which way it points
+     */
+    public Degrees heading() {
+        return heading.getDegrees();
+    }
 }

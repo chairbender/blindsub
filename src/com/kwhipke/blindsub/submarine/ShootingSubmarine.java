@@ -21,7 +21,6 @@ public abstract class ShootingSubmarine extends Submarine {
      * @param physicsEngineController the controller to access the physics engine with
 	 */
 	protected void fire(PhysicsEngineController physicsEngineController) {
-		//TODO: Acquire the torpedo type from the submarinetype
 		Torpedo torpedo = new Torpedo(this.currentState.getCurrentHeading(),this);
 		physicsEngineController.addObject(torpedo, physicsEngineController.getMyPosition());
 	}

@@ -13,7 +13,7 @@ import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineTypes;
 
-//TODO: CUrrent goal, get it to a state where it compiles, you can drive the player sub around, and you can ping the other sub
+//TODO: Current goal: you can ping the torpedo
 
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles
@@ -47,6 +47,8 @@ public class Game {
 		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body and engine.
 		AndroidController androidController = new AndroidController(new SteeringSensorReader(),btnThrottle,btnPing,btnFire,playerSub,playerSub,playerSub);
 		physEng.addObject(playerSub, Position.ORIGIN);
+
+        physEng.start();
 	}
 
     public void pause() {

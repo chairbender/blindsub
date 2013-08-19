@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.kwhipke.blindsub.engine.Ticker;
+import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
+import com.kwhipke.blindsub.units.Meters;
 
 
 /**
@@ -105,7 +107,7 @@ public class PhysicsEngine {
 	private Set<TrackedPhysicalObject> checkCollisions(TrackedPhysicalObject obj) {
 		Set<TrackedPhysicalObject> result = new HashSet<TrackedPhysicalObject>();
 		for (TrackedPhysicalObject other : trackedObjects.values()) {
-			if (other != obj) {
+			if (other != obj && obj.collidesWith(other)) {
 				CollisionBounds objBounds = obj.getCollisionBounds();
 				CollisionBounds otherBounds = obj.getCollisionBounds();
 				Position otherPosition = other.getPosition();
@@ -190,7 +192,8 @@ public class PhysicsEngine {
     public long getTravelTime(PhysObj source, PhysObj echoObject) {
         TrackedPhysicalObject sourceTrackedObj = trackedObjects.get(source);
         TrackedPhysicalObject echoTrackedObject = trackedObjects.get(echoObject);
-        return Math.round(sourceTrackedObj.getPosition().distanceTo(echoTrackedObject.getPosition()).getMeters() / SOUND_METERS_PER_SECOND * 1000);
+        Meters distance = sourceTrackedObj.getPosition().distanceTo(echoTrackedObject.getPosition());
+        return Math.round(distance.getMeters() / SOUND_METERS_PER_SECOND * 1000);
 
     }
 }

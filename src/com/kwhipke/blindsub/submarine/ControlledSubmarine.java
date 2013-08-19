@@ -1,6 +1,7 @@
 package com.kwhipke.blindsub.submarine;
 
 import android.util.Log;
+import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.physics.PhysicsEngineController;
 import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.sound.SoundEngineController;
@@ -35,7 +36,12 @@ public class ControlledSubmarine extends ShootingSubmarine implements OnThrottle
 		currentState.tick(submarineType,elapsedMillis);
 	}
 
-	@Override
+    @Override
+    public boolean collidesWith(PhysObj other) {
+        return !(other instanceof Torpedo && ((Torpedo)other).wasCreatedBy(this));
+    }
+
+    @Override
 	public void onSteeringChanged(Steering newSteering) {
 		currentState.setSteering(newSteering);
 	}

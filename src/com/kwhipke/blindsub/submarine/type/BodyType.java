@@ -1,10 +1,8 @@
 package com.kwhipke.blindsub.submarine.type;
 
-import com.kwhipke.blindsub.physics.CollisionBounds;
+import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
 import com.kwhipke.blindsub.submarine.Damage;
 import com.kwhipke.blindsub.submarine.Torpedo;
-import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
-import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.stats.BodyCharacteristics;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.submarine.stats.TurningRadius;
