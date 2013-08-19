@@ -16,7 +16,7 @@ public class Integrity {
 	}
 	
 	public void takeDamage(Damage toTake) {
-		integrity = toTake.getIntegritySubtracted();
+		integrity -= toTake.getIntegritySubtracted();
 	}
 
 	/*

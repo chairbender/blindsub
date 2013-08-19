@@ -1,12 +1,7 @@
 package com.kwhipke.blindsub.submarine.state;
 
 import com.kwhipke.blindsub.physics.Heading;
-import com.kwhipke.blindsub.physics.Position;
-import com.kwhipke.blindsub.submarine.control.Steering;
-import com.kwhipke.blindsub.submarine.stats.Speed;
-import com.kwhipke.blindsub.submarine.stats.TurningRadius;
 import com.kwhipke.blindsub.units.Degrees;
-import com.kwhipke.blindsub.units.Meters;
 
 /**
  * Encapsulates all that is needed to represent the Submarine's state
@@ -15,12 +10,10 @@ import com.kwhipke.blindsub.units.Meters;
  */
 public class SubmarineSpatialState {
 	private Heading facing;
-	private Position position;
 	
-	public static final SubmarineSpatialState ORIGIN = new SubmarineSpatialState(Position.ORIGIN,new Heading(0));
+	public static final SubmarineSpatialState ORIGIN = new SubmarineSpatialState(new Heading(0));
 	
-	public SubmarineSpatialState(Position initPos, Heading initFacing) {
-		this.position = initPos;
+	public SubmarineSpatialState(Heading initFacing) {
 		this.facing = initFacing;
 	}
 	

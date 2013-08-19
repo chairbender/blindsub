@@ -13,7 +13,7 @@ import com.kwhipke.blindsub.units.Meters;
  */
 public class Torpedo implements PhysObj, DamagingObject{
 
-	private static final Damage DAMAGE = new Damage(5.0);
+	private static final Damage DAMAGE = new Damage(0.5);
 	private static final Speed SPEED = new Speed(new Meters(30));
 	private static final CollisionBounds COLLISION_BOUNDS = new CircularBounds(new Meters(1.5));
 

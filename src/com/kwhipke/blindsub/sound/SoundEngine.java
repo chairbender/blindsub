@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.sound;
 
+import android.util.Log;
 import com.kwhipke.blindsub.physics.VelocityVector;
 import com.kwhipke.blindsub.submarine.SoundPhysObj;
 import org.pielot.openal.*;
@@ -58,10 +59,9 @@ public class SoundEngine implements Ticker, SoundEngineController {
         SoundEnv.getInstance().setListenerOrientation(listener.getVelocityVector().heading());
 		
 		//Update positions of soundsets based on the physicalobjects they represent
-		for (PhysObj physicalObject : objectSounds.keySet()) {
-			SoundSource soundSource = objectSounds.get(physicalObject);
-			soundSource.updatePosition(physicsEngine.getPositionOfPhysObj(physicalObject));
-		}
+        //Remove any that are missing
+        updateTrackedPhysicalObjects();
+
 		
 		//Play delayed sounds if it's time
 		Set<PlaySoundDelayed> toRemove = new HashSet<PlaySoundDelayed>();
@@ -76,15 +76,39 @@ public class SoundEngine implements Ticker, SoundEngineController {
 		
 	}
 
-	public void playSound(Sound toPlay,PhysObj source, boolean loop) throws IOException {
+    /**
+     * Updates the sounds to match the positions of the objects they are occurring on.
+     * Removes any objects that no longer exist.
+     */
+    private void updateTrackedPhysicalObjects() {
+        Set<PhysObj> toRemove = new HashSet<PhysObj>();
+        for (PhysObj physicalObject : objectSounds.keySet()) {
+            SoundSource soundSource = objectSounds.get(physicalObject);
+            Position objectPosition = physicsEngine.getPositionOfPhysObj(physicalObject);
+            if (objectPosition != null) {
+                soundSource.updatePosition(objectPosition);
+            } else {
+                toRemove.add(physicalObject);
+            }
+        }
+        for (PhysObj obj : toRemove) {
+            objectSounds.remove(obj);
+        }
+    }
+
+    public void playSound(Sound toPlay,PhysObj source, boolean loop) {
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(source);
 		SoundSource currentSounds = objectSounds.get(source);
 		if (currentSounds == null) {
 			currentSounds = new SoundSource(sourcePosition,source == listener);
 			objectSounds.put(source, currentSounds);
 		}
-		currentSounds.play(toPlay,loop);
-	}
+        try {
+            currentSounds.play(toPlay,loop);
+        } catch (IOException e) {
+            Log.e("SoundEngine", e.getMessage());
+        }
+    }
 
     /**
      * Make a sound play in a certain amount of time

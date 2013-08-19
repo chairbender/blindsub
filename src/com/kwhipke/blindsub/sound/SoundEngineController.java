@@ -21,7 +21,7 @@ public interface SoundEngineController {
      * will still play. No need to return a handle because the physobj takes care of updating the sound position, and
      * the stopSound method will work since there is ever only one looping instance of a given sound.
      */
-    public void playSound(Sound toPlay, PhysObj source, boolean loop) throws IOException;
+    public void playSound(Sound toPlay, PhysObj source, boolean loop);
 
     /**
      * Causes a ping to echo from the source and be echoed back to the source from any other physobjects in the engine.

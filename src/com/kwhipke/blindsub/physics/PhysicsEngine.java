@@ -27,7 +27,7 @@ import com.kwhipke.blindsub.units.Meters;
  *
  */
 public class PhysicsEngine {
-    private static final double SOUND_METERS_PER_SECOND = 50;
+    private static final double SOUND_METERS_PER_SECOND = 100;
     private boolean isPaused = false;
 	private final long millisecondsPerTick;
 	Map<PhysObj,TrackedPhysicalObject> trackedObjects;
@@ -61,6 +61,7 @@ public class PhysicsEngine {
 		 * For each object, get its speed and direction. Then calculate its new position after millisPerTick milliseconds.
 		 * Set the new position of it. Check for collissions. If it collides with another object, move it back to where it was and run the collision handler.
 		 */
+        Set<TrackedPhysicalObject> toRemove = null;
 		for (TrackedPhysicalObject obj : trackedObjects.values()) {
 			VelocityVector velocityVector = obj.getVelocityVector();
 			Position oldPosition = obj.getPosition();
@@ -69,25 +70,40 @@ public class PhysicsEngine {
 			Set<TrackedPhysicalObject> collisions = checkCollisions(obj);
 			if (collisions.size() > 0) {
 				obj.setPosition(oldPosition);
-				triggerCollisions(obj,collisions);
+				toRemove = triggerCollisionsAndGetDestroyedObjects(obj, collisions);
 			}
 		}
+        //Remove destroyd objects
+        removeFromPhysics(toRemove);
+
         //Call all the tick methods
         for (TrackedPhysicalObject obj : trackedObjects.values()) {
             obj.getPhysObj().tick(millisecondsPerTick,new PhysicsEngineController(this,obj.getPhysObj()));
         }
 		if (doAfterTick != null) {
 			doAfterTick.tick();
-			
 		}
 	}
+
+    /**
+     *
+     * @param toRemove objects to remove from the simulation
+     */
+    private void removeFromPhysics(Set<TrackedPhysicalObject> toRemove) {
+        if (toRemove != null) {
+            for (TrackedPhysicalObject objToRemove : toRemove) {
+                trackedObjects.remove(objToRemove.getPhysObj());
+            }
+        }
+    }
 	
 	/**
 	 * resolve collisions between obj and others
 	 * @param obj
 	 * @param others
+     * @return the objects that have been destroyed and should be removed from physics tracking
 	 */
-	private void triggerCollisions(TrackedPhysicalObject obj, Set<TrackedPhysicalObject> others) {
+	private Set<TrackedPhysicalObject> triggerCollisionsAndGetDestroyedObjects(TrackedPhysicalObject obj, Set<TrackedPhysicalObject> others) {
 		Set<TrackedPhysicalObject> toRemove = new HashSet<TrackedPhysicalObject>();
 		for (TrackedPhysicalObject other : others) {
 			if (obj.doCollision(other)) {
@@ -98,9 +114,7 @@ public class PhysicsEngine {
 			}
 		}
 		
-		for (TrackedPhysicalObject toDelete : toRemove) {
-			trackedObjects.remove(toDelete.getPhysObj());
-		}
+		return toRemove;
 	}
 	
 	//if obj collides with anything else add it to the set and return it

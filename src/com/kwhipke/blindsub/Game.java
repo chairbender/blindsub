@@ -2,10 +2,12 @@ package com.kwhipke.blindsub;
 
 import android.widget.Button;
 
+import com.kwhipke.blindsub.physics.Heading;
 import com.kwhipke.blindsub.physics.PhysicsEngine;
 import com.kwhipke.blindsub.physics.Position;
 import com.kwhipke.blindsub.sound.SoundEngine;
 import com.kwhipke.blindsub.submarine.ControlledSubmarine;
+import com.kwhipke.blindsub.submarine.Rock;
 import com.kwhipke.blindsub.submarine.control.AndroidController;
 import com.kwhipke.blindsub.submarine.control.SteeringSensorReader;
 import com.kwhipke.blindsub.submarine.state.SubmarineSpatialState;
@@ -13,7 +15,7 @@ import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineTypes;
 
-//TODO: Current goal: you can ping the torpedo
+//TODO: Destroy rocks!
 
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles
@@ -44,10 +46,11 @@ public class Game {
 		 playerSub = new ControlledSubmarine(new SubmarineState(SubmarineSpatialState.ORIGIN,new SubmarineStatus()),SubmarineTypes.BASIC,soundEng);
 
         soundEng.setListener(playerSub);
-		//TODO: Hook up the buttons. Implement the physics and figuring out the submarine's stats based on the body and engine.
 		AndroidController androidController = new AndroidController(new SteeringSensorReader(),btnThrottle,btnPing,btnFire,playerSub,playerSub,playerSub);
 		physEng.addObject(playerSub, Position.ORIGIN);
 
+        Rock rock = new Rock(new SubmarineState(new SubmarineSpatialState(new Heading(0)),new SubmarineStatus()),SubmarineTypes.BASIC,soundEng);
+        physEng.addObject(rock,new Position(50,50));
         physEng.start();
 	}
 

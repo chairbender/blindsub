@@ -3,6 +3,7 @@ package com.kwhipke.blindsub.submarine;
 import com.kwhipke.blindsub.physics.bounds.CollisionBounds;
 import com.kwhipke.blindsub.physics.PhysObj;
 import com.kwhipke.blindsub.sound.SoundEngineController;
+import com.kwhipke.blindsub.sound.submarine.SubmarineSounds;
 import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.type.SubmarineType;
 
@@ -28,8 +29,12 @@ public abstract class Submarine extends SoundPhysObj  {
 		if (other instanceof Torpedo) {
 			//Take damage, calculated based on the type of submarine this is and the
 			//torpedo
+            soundEngineController.playSound(SubmarineSounds.TORPEDO_HIT,this,false);
 			currentState.takeDamage(submarineType,(Torpedo)other);
 		}
+        if (currentState.isDestroyed()) {
+            soundEngineController.playSound(SubmarineSounds.EXPLODE,this,false);
+        }
 		
 		return currentState.isDestroyed();
 	}
