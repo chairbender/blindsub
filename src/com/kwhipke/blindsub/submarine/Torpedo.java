@@ -15,10 +15,13 @@ public class Torpedo implements PhysObj, DamagingObject{
 
 	private static final Damage DAMAGE = new Damage(0.5);
 	private static final Speed SPEED = new Speed(new Meters(30));
-	private static final CollisionBounds COLLISION_BOUNDS = new CircularBounds(new Meters(1.5));
+	private static final CollisionBounds COLLISION_BOUNDS = new CircularBounds(new Meters(1));
 
 	private PhysObj creator;
 	private VelocityVector vector;
+    private Meters distanceTraveled;
+
+    private static final Meters MAX_DISTANCE = new Meters(500);
 	/**
 	 * 
 	 * @param initialHeading the initial heading of the torpedo
@@ -27,6 +30,7 @@ public class Torpedo implements PhysObj, DamagingObject{
 	public Torpedo(Heading initialHeading, PhysObj creator) {
 		this.creator = creator;
 		this.vector = new VelocityVector(SPEED,initialHeading);
+        distanceTraveled = new Meters(0);
 	}
 
 	@Override
@@ -41,7 +45,7 @@ public class Torpedo implements PhysObj, DamagingObject{
 
 	@Override
 	public boolean doCollision(PhysObj other) {
-		if (other != creator) {
+		if (other != creator || distanceTraveled.getMeters() > MAX_DISTANCE.getMeters()) {
 			return true;
 		}
 		return false;
@@ -55,6 +59,7 @@ public class Torpedo implements PhysObj, DamagingObject{
 	@Override
 	public void tick(long elapsedMilliseconds, PhysicsEngineController controller) {
 		// do nothing
+        distanceTraveled.add(SPEED.displacement(elapsedMilliseconds));
 		
 	}
 

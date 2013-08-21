@@ -26,7 +26,8 @@ public class TurningRadius {
 		double circumference = (2 * Math.PI * radius.getMeters());
 		//Figure out change in angle if traveling along turning circle.
 		//Traveling the full circumference would be 180 degrees
-		return new Degrees(-1 * (((displacement.getMeters() / circumference) * 180) * currentSteering.getSteeringScalar()));
+		return new Degrees(-1 * (((displacement.getMeters() / circumference) * 180) *
+                (-1 * currentSteering.getSteeringScalar()))); //multiply steering scalar by -1 since we want left turn to go in the positive degrees direction, but -1 indicates left turn
 	}
 
 }

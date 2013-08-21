@@ -22,5 +22,8 @@ public class Degrees {
 	public void add(Degrees toAdd) {
 		this.degrees += toAdd.getDegrees();
 		this.degrees = this.degrees % 360;
+        if (this.degrees < 0) {
+            this.degrees += 360;
+        }
 	}
 }

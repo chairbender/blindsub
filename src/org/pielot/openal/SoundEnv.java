@@ -126,26 +126,13 @@ public class SoundEnv {
 	 * @param heading the direction the listener should face, in degrees ( 0 is east 90 is north)
 	 */
 	public void setListenerOrientation(Degrees heading) {
-		double degrees = getOpenAlOrientation(heading.getDegrees());
-		double zv = -Math.cos(Math.toRadians(degrees));
-		double xv = Math.sin(Math.toRadians(degrees));
-		this.setListenerOrientation((float) xv, 0, (float) zv);
+		double degrees = heading.getDegrees();
+		double yv = Math.sin(Math.toRadians(degrees));
+		double xv = Math.cos(Math.toRadians(degrees));
+        //TODO: Figure out the UP direction and make sure the pos and orientation are being set correctly
+		this.setListenerOrientation((float) xv, (float) yv, 0);
 	}
-	
-    
-    /**
-     * Given a heading in degrees with 0 degrees being east and 90 north,
-     * convert to the openAl orientation in degrees
-     * @param subgameOrientation
-     * @return
-     */
-    private static double getOpenAlOrientation(double subgameOrientation) {
-    	double sourceHeading = subgameOrientation - 180;
-		if (sourceHeading < 0) {
-			sourceHeading = sourceHeading + 360;
-		}
-		return sourceHeading;
-    }
+
 
 	/**
 	 * Rotates the listener to face into the given direction.

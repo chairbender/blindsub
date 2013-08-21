@@ -1,5 +1,6 @@
 package com.kwhipke.blindsub.physics;
 
+import android.util.Log;
 import com.kwhipke.blindsub.submarine.stats.Speed;
 import com.kwhipke.blindsub.units.Degrees;
 import com.kwhipke.blindsub.units.Meters;

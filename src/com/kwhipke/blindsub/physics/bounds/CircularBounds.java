@@ -28,7 +28,8 @@ public class CircularBounds implements CollisionBounds {
         if (otherBounds instanceof CircularBounds) {
             CircularBounds otherCircularBounds = (CircularBounds) otherBounds;
             //Get the distance between the origins and check if that is less than the sum of their radii
-            double distance = Math.sqrt(origin.x * otherOrigin.x + origin.y * otherOrigin.y);
+            double distance = Math.sqrt((origin.x - otherOrigin.x)*(origin.x - otherOrigin.x) +
+                    (origin.y - otherOrigin.y) * (origin.y - otherOrigin.y));
             double totalRadii = this.collisionRadius.getMeters() + otherCircularBounds.collisionRadius.getMeters();
             return distance < totalRadii;
         } else {

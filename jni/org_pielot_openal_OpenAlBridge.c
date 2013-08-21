@@ -69,7 +69,7 @@ JNIEXPORT jint JNICALL Java_org_pielot_openal_OpenAlBridge_setListenerPos
 
 JNIEXPORT jint JNICALL Java_org_pielot_openal_OpenAlBridge_setListenerOrientation
 	(JNIEnv * env, jclass klass, jfloat xAt, jfloat yAt, jfloat zAt) {
-		return setListenerOrientation(xAt, yAt, zAt, 0, 1, 0);
+		return setListenerOrientation(xAt, yAt, zAt, 0, 0, 1);
 	}
 
 JNIEXPORT jint JNICALL Java_org_pielot_openal_OpenAlBridge_close 

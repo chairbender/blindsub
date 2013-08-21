@@ -55,7 +55,7 @@ public class SoundEngine implements Ticker, SoundEngineController {
 		//Update listener position
 		Position sourcePosition = physicsEngine.getPositionOfPhysObj(listener);
 		SoundEnv.getInstance().setListenerPos(sourcePosition.x, sourcePosition.y, 0);
-        VelocityVector vec = listener.getVelocityVector();
+
         SoundEnv.getInstance().setListenerOrientation(listener.getVelocityVector().heading());
 		
 		//Update positions of soundsets based on the physicalobjects they represent
@@ -78,7 +78,7 @@ public class SoundEngine implements Ticker, SoundEngineController {
 
     /**
      * Updates the sounds to match the positions of the objects they are occurring on.
-     * Removes any objects that no longer exist.
+     * Removes any objects that no longer exist or are out of MAX_HEARING_RANGE.
      */
     private void updateTrackedPhysicalObjects() {
         Set<PhysObj> toRemove = new HashSet<PhysObj>();

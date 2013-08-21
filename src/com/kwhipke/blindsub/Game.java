@@ -15,7 +15,7 @@ import com.kwhipke.blindsub.submarine.state.SubmarineState;
 import com.kwhipke.blindsub.submarine.state.SubmarineStatus;
 import com.kwhipke.blindsub.submarine.type.SubmarineTypes;
 
-//TODO: Destroy rocks!
+//TODO: Fix the sub steering and movement glitches. Come up with a way to figure out position easily for debugging.
 
 /**
  * Encapsulates the running of a game (the subs competing in an arena, not the menu and other stuff). Handles

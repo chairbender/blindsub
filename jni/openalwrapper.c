@@ -110,7 +110,7 @@ int releaseSource(int sourceId) {
 
 int setPositon(int sourceId, float x, float y, float z) {
 	if(INITIALIZED) {
-		// LOG_VERBOSE("setPositon( %i, %.2f, %.2f, %.2f )", sourceId, x, y, z);
+		 LOG_ERROR("setPositon( %i, %.2f, %.2f, %.2f )", sourceId, x, y, z);
 		float pos [] = {x, y, z};
 		alSourcefv(sourceId, AL_POSITION, pos);
 		
@@ -176,7 +176,7 @@ int stop(int sourceId) {
 
 int setListenerPosition(float x, float y, float z) {
 	if(INITIALIZED) {
-		// LOG_VERBOSE("setListenerPosition( %.2f, %.2f, %.2f )", x, y, z);
+		 LOG_ERROR("setListenerPosition( %.2f, %.2f, %.2f )", x, y, z);
 		float listenerPos []  = {x, y, z};
 		alListenerfv(AL_POSITION, listenerPos);
 		
@@ -188,7 +188,7 @@ int setListenerPosition(float x, float y, float z) {
 
 int setListenerOrientation(float xAt, float yAt, float zAt, float xUp, float yUp, float zUp) {
 	if(INITIALIZED) {
-		// LOG_VERBOSE("setListenerOrientation( %.2f, %.2f, %.2f, %.2f, %.2f, %.2f  )", xAt, yAt, zAt, xUp, yUp, zUp);
+		 LOG_ERROR("setListenerOrientation( %.2f, %.2f, %.2f, %.2f, %.2f, %.2f  )", xAt, yAt, zAt, xUp, yUp, zUp);
 		float listenerOri []  = {xAt, yAt, zAt, xUp, yUp, zUp};
 		alListenerfv(AL_ORIENTATION, listenerOri);
 		

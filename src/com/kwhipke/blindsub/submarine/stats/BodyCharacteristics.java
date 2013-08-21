@@ -17,7 +17,7 @@ public class BodyCharacteristics {
 	private TurningRadius minTurningRadius;
 	private CollisionBounds collisionBounds;
 	
-	public static final BodyCharacteristics BASIC = new BodyCharacteristics(new DamageResistance(.2),new Speed(new Meters(5)),new TurningRadius(new Meters(10)), new CircularBounds(new Meters(5)));
+	public static final BodyCharacteristics BASIC = new BodyCharacteristics(new DamageResistance(.2),new Speed(new Meters(5)),new TurningRadius(new Meters(10)), new CircularBounds(new Meters(2.5)));
 	
 	public BodyCharacteristics(DamageResistance damageResistance, Speed topSpeed, TurningRadius minTurningRadius, CollisionBounds bodyRadius) {
 		this.damageResistance = damageResistance;

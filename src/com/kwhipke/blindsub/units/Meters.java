@@ -15,4 +15,8 @@ public class Meters {
 	public double getMeters() {
 		return meters;
 	}
+
+    public void add(float displacement) {
+        this.meters += displacement;
+    }
 }
